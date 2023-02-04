@@ -10,6 +10,7 @@ import Foundation
 enum CurrencyPickerModel: Int, CaseIterable {
     case USD
     case EUR
+    case JPY
     
     var segmentIndex: Int {
         return rawValue
