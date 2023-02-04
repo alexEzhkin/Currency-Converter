@@ -7,21 +7,37 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    var collectionCellSize: CGSize {
+        let size = 50
+        
+        return CGSize(width: size, height: size)
+    }
+    
+    let currencySymbols = ["$", "€", "¥", "$", "€", "¥", "$", "€", "¥", "$", "€", "¥"]
+    let currencyBalances = [100.0, 200.0, 300.0, 100.0, 200.0, 300.0, 100.0, 200.0, 300.0, 100.0, 200.0, 300.0]
     
     @IBOutlet weak var sellCurrencyPicker: UIPickerView!
     @IBOutlet weak var recieveCurrencyPicker: UIPickerView!
+    @IBOutlet weak var currencyBalanceCollectionView: UICollectionView!
     
     var pickerData: [CurrencyPickerModel] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.sellCurrencyPicker.delegate = self
         self.sellCurrencyPicker.dataSource = self
-        
+
         self.recieveCurrencyPicker.delegate = self
         self.recieveCurrencyPicker.dataSource = self
+        
+        self.currencyBalanceCollectionView.delegate = self
+        self.currencyBalanceCollectionView.dataSource = self
+        
+        currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
         
         pickerData = CurrencyPickerModel.allCases
         
@@ -57,6 +73,24 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         } else {
             return "\(pickerData[row])"
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return collectionCellSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(currencySymbols.count)
+        return currencySymbols.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: "CurrencyBalanceCell", for: indexPath) as! CurrencyBalanceCell
+        
+        cell.symbolLabel.text = currencySymbols[indexPath.row]
+        cell.balanceLabel.text = String(currencyBalances[indexPath.row])
+        
+        return cell
     }
     
 }
