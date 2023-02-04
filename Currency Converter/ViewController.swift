@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     }
     
     func fetchExchangeRate() {
-        getRequest(fromAmount: 340.51, fromCurrency: "EUR", toCurrency: "USD", completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
+        NetworkService.shared.getRequest(fromAmount: 340.51, fromCurrency: "EUR", toCurrency: "USD", completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
             switch result {
             case .success(let response):
                 print(response.amount)
