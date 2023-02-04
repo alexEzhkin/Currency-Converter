@@ -7,11 +7,24 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    @IBOutlet weak var sellCurrencyPicker: UIPickerView!
+    @IBOutlet weak var recieveCurrencyPicker: UIPickerView!
+    
+    var pickerData: [CurrencyPickerModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        self.sellCurrencyPicker.delegate = self
+        self.sellCurrencyPicker.dataSource = self
+        
+        self.recieveCurrencyPicker.delegate = self
+        self.recieveCurrencyPicker.dataSource = self
+        
+        pickerData = CurrencyPickerModel.allCases
+        
         fetchExchangeRate()
     }
     
@@ -25,5 +38,26 @@ class ViewController: UIViewController {
             }
         })
     }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if pickerView.tag == 1 {
+            return pickerData.count
+        } else {
+            return pickerData.count
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+        if pickerView.tag == 1 {
+            return "\(pickerData[row])"
+        } else {
+            return "\(pickerData[row])"
+        }
+    }
+    
 }
 

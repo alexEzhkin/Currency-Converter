@@ -15,6 +15,7 @@
 		FA04383A298D13B400F0E1E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA043838298D13B400F0E1E6 /* LaunchScreen.storyboard */; };
 		FA043843298D505100F0E1E6 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA043842298D505100F0E1E6 /* NetworkService.swift */; };
 		FA043846298D60C200F0E1E6 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA043845298D60C200F0E1E6 /* NetworkError.swift */; };
+		FA3878AD298E9E6600AD6F34 /* CurrencyPickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3878AC298E9E6600AD6F34 /* CurrencyPickerModel.swift */; };
 		FAE76499298D66FA0025C851 /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE76498298D66FA0025C851 /* CurrencyModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		FA04383B298D13B400F0E1E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA043842298D505100F0E1E6 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		FA043845298D60C200F0E1E6 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		FA3878AC298E9E6600AD6F34 /* CurrencyPickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerModel.swift; sourceTree = "<group>"; };
 		FAE76498298D66FA0025C851 /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				FAE76498298D66FA0025C851 /* CurrencyModel.swift */,
+				FA3878AC298E9E6600AD6F34 /* CurrencyPickerModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -174,6 +177,7 @@
 				FA043832298D13B200F0E1E6 /* ViewController.swift in Sources */,
 				FA04382E298D13B200F0E1E6 /* AppDelegate.swift in Sources */,
 				FAE76499298D66FA0025C851 /* CurrencyModel.swift in Sources */,
+				FA3878AD298E9E6600AD6F34 /* CurrencyPickerModel.swift in Sources */,
 				FA043843298D505100F0E1E6 /* NetworkService.swift in Sources */,
 				FA043830298D13B200F0E1E6 /* SceneDelegate.swift in Sources */,
 				FA043846298D60C200F0E1E6 /* NetworkError.swift in Sources */,
