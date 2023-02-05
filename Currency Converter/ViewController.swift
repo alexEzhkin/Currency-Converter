@@ -9,19 +9,16 @@ import UIKit
 
 class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
     
-    let currencySymbols = CurrencyPickerModel.allCases.map { $0.segmentTitle }
-    let currencyBalances = CurrencyPickerModel.allCases.map { $0.segmentTitle }.compactMap { key in
-        return UserDefaults.standard.string(forKey: key)
-    }
-    
     @IBOutlet weak var sellCurrencyPicker: UIPickerView!
     @IBOutlet weak var recieveCurrencyPicker: UIPickerView!
     @IBOutlet weak var currencyBalanceCollectionView: UICollectionView!
     @IBOutlet weak var sellCurrencyTextField: UITextField!
     @IBOutlet weak var recieveCurrencyLabel: UILabel!
     
-    var pickerData: [CurrencyPickerModel] = []
-    var amountData: Double = 0.00
+    let currencySymbols = CurrencyPickerModel.allCases.map { $0.segmentTitle }
+    let currencyBalances: [String] = []
+    
+    var currencyPicker: [CurrencyPickerModel] = []
     var chosenStateOfsellCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
     var chosenStateOfrecieveCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
     
@@ -40,9 +37,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
         
-        pickerData = CurrencyPickerModel.allCases
-        
-        UserDefaultsService.shared.getData()
+        currencyPicker = CurrencyPickerModel.allCases
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -57,8 +52,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         NetworkService.shared.getRequest(fromAmount: amount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: toCurrency, completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
             switch result {
             case .success(let response):
-                self?.recieveCurrencyLabel.text = "+ \(response.amount)"
-                print(response.amount)
+                self?.recieveCurrencyLabel.text = "\(response.amount)"
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -71,41 +65,68 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView.tag == 1 {
-            return pickerData.count
+            return currencyPicker.count
         } else {
-            return pickerData.count
+            return currencyPicker.count
         }
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView.tag == 1 {
-            chosenStateOfsellCurrencyPicker = pickerData[row].segmentTitle
+            chosenStateOfsellCurrencyPicker = currencyPicker[row].segmentTitle
         } else {
-            chosenStateOfrecieveCurrencyPicker = pickerData[row].segmentTitle
+            chosenStateOfrecieveCurrencyPicker = currencyPicker[row].segmentTitle
         }
+        textFieldDidChangeSelection(sellCurrencyTextField)
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
         if pickerView.tag == 1 {
-            return "\(pickerData[row])"
+            return "\(currencyPicker[row])"
         } else {
-            return "\(pickerData[row])"
+            return "\(currencyPicker[row])"
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(currencySymbols.count)
         return currencySymbols.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: "CurrencyBalanceCell", for: indexPath) as! CurrencyBalanceCell
         
+        let currencyBalances = CurrencyPickerModel.allCases.map { $0.segmentTitle }.compactMap { key in
+            return UserDefaults.standard.string(forKey: key)
+        }
+        
         cell.symbolLabel.text = currencySymbols[indexPath.row]
         cell.balanceLabel.text = String(currencyBalances[indexPath.row])
         
         return cell
     }
-    
+    @IBAction func submitConversionButton(_ sender: Any) {
+        if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
+            return
+        }
+        
+        let textFromSellCurrencyTextField = sellCurrencyTextField.text ?? ""
+        let amountForSell = Double(textFromSellCurrencyTextField) ?? 0.0
+        
+        let textFromRecieveCurrencyLabel = recieveCurrencyLabel.text ?? ""
+        let amountForRecieve = Double(textFromRecieveCurrencyLabel) ?? 0.0
+        
+        let currentCurrencyBalance = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfsellCurrencyPicker)
+        let currentBalanceForRecieveCurrency = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfrecieveCurrencyPicker)
+        
+        if currentCurrencyBalance >= amountForSell {
+            let newBalanceForSellCurrency = currentCurrencyBalance - amountForSell
+            let newBalanceForRecieveCurrency = currentBalanceForRecieveCurrency + amountForRecieve
+            UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
+            UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)
+        } else {
+            print("You don't have enouth amount")
+        }
+        currencyBalanceCollectionView.reloadData()
+    }
 }
 

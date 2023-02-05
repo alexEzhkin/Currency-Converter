@@ -14,9 +14,11 @@ class UserDefaultsService {
     
     let defaults = UserDefaults.standard
     
-    func getData() {
-        print(defaults.value(forKey: "USD"))
-        print(defaults.value(forKey: "EUR"))
-        print(defaults.value(forKey: "JPY"))
+    func getCurrencyBalance(forCurrency: String) -> Double {
+        return defaults.double(forKey: forCurrency)
+    }
+    
+    func changeCurrencyBalance(newBalance: Double, forCurrency: String) {
+        defaults.set(newBalance, forKey: forCurrency)
     }
 }
