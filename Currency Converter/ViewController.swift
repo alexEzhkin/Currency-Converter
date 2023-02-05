@@ -122,13 +122,13 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         let countOfCurrencyConversions = UserDefaultsService.shared.getCountOfCurrencyConverions()
         
         if currentCurrencyBalance >= amountForSell {
-            if countOfCurrencyConversions > 5 {
+            if countOfCurrencyConversions >= 5 {
                 let commissionFee = amountForSell * 0.007
-                showAlert(alertText: "Currency Converted", alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee) \(chosenStateOfsellCurrencyPicker)")
+                showAlert(alertText: "Currency Converted", alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee.roundTo(places: 2)) \(chosenStateOfsellCurrencyPicker)")
                 amountForSell = amountForSell + commissionFee
             }
-            let newBalanceForSellCurrency = currentCurrencyBalance - amountForSell
-            let newBalanceForRecieveCurrency = currentBalanceForRecieveCurrency + amountForRecieve
+            let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
+            let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
             
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)

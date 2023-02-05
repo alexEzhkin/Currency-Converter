@@ -19,6 +19,7 @@
 		FA3878AF298EB17700AD6F34 /* CurrencyBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3878AE298EB17700AD6F34 /* CurrencyBalanceCell.swift */; };
 		FA3878B2298EC67B00AD6F34 /* CurrencyBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA3878B1298EC67B00AD6F34 /* CurrencyBalanceCell.xib */; };
 		FA7F6EA0298F0B8B005ED470 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA7F6E9F298F0B8B005ED470 /* UserDefaultsService.swift */; };
+		FA9AE50E298FEF95003A7037 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9AE50D298FEF95003A7037 /* Double+Extension.swift */; };
 		FAE76499298D66FA0025C851 /* CurrencyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE76498298D66FA0025C851 /* CurrencyModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		FA3878AE298EB17700AD6F34 /* CurrencyBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyBalanceCell.swift; sourceTree = "<group>"; };
 		FA3878B1298EC67B00AD6F34 /* CurrencyBalanceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CurrencyBalanceCell.xib; sourceTree = "<group>"; };
 		FA7F6E9F298F0B8B005ED470 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
+		FA9AE50D298FEF95003A7037 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		FAE76498298D66FA0025C851 /* CurrencyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,6 +72,7 @@
 		FA04382C298D13B200F0E1E6 /* Currency Converter */ = {
 			isa = PBXGroup;
 			children = (
+				FA9AE50C298FEF73003A7037 /* Extensions */,
 				FA3878B0298EC65700AD6F34 /* CurrencyBalanceCell */,
 				FAE76497298D66E80025C851 /* Models */,
 				FA043844298D603300F0E1E6 /* Helpers */,
@@ -109,6 +112,14 @@
 				FA3878B1298EC67B00AD6F34 /* CurrencyBalanceCell.xib */,
 			);
 			path = CurrencyBalanceCell;
+			sourceTree = "<group>";
+		};
+		FA9AE50C298FEF73003A7037 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FA9AE50D298FEF95003A7037 /* Double+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		FAE76497298D66E80025C851 /* Models */ = {
@@ -200,6 +211,7 @@
 				FA3878AF298EB17700AD6F34 /* CurrencyBalanceCell.swift in Sources */,
 				FA7F6EA0298F0B8B005ED470 /* UserDefaultsService.swift in Sources */,
 				FA043830298D13B200F0E1E6 /* SceneDelegate.swift in Sources */,
+				FA9AE50E298FEF95003A7037 /* Double+Extension.swift in Sources */,
 				FA043846298D60C200F0E1E6 /* NetworkError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
