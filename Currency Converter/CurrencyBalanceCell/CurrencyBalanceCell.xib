@@ -14,36 +14,24 @@
             <rect key="frame" x="0.0" y="0.0" width="272" height="180"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="W7f-Je-bKx">
-                    <rect key="frame" x="5" y="54" width="262" height="121"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIq-ya-fBT">
-                            <rect key="frame" x="0.0" y="0.0" width="123.33333333333333" height="121"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbs-TO-zng">
-                            <rect key="frame" x="128.33333333333337" y="0.0" width="133.66666666666663" height="121"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8b-wt-vP2">
+                    <rect key="frame" x="0.0" y="59" width="272" height="121"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="7X6-iw-Bfi"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="7X6-iw-Bfi" firstAttribute="bottom" secondItem="W7f-Je-bKx" secondAttribute="bottom" constant="5" id="4AT-k2-408"/>
-                <constraint firstItem="7X6-iw-Bfi" firstAttribute="trailing" secondItem="W7f-Je-bKx" secondAttribute="trailing" constant="5" id="az3-d2-YNZ"/>
-                <constraint firstItem="W7f-Je-bKx" firstAttribute="leading" secondItem="7X6-iw-Bfi" secondAttribute="leading" constant="5" id="h3X-S1-7iQ"/>
-                <constraint firstItem="7X6-iw-Bfi" firstAttribute="top" secondItem="W7f-Je-bKx" secondAttribute="top" constant="5" id="p7s-6r-PAK"/>
+                <constraint firstItem="I8b-wt-vP2" firstAttribute="leading" secondItem="7X6-iw-Bfi" secondAttribute="leading" id="HLO-9J-adX"/>
+                <constraint firstItem="7X6-iw-Bfi" firstAttribute="bottom" secondItem="I8b-wt-vP2" secondAttribute="bottom" id="k8E-a0-pCb"/>
+                <constraint firstItem="I8b-wt-vP2" firstAttribute="top" secondItem="7X6-iw-Bfi" secondAttribute="top" id="qYN-3p-4uV"/>
+                <constraint firstItem="7X6-iw-Bfi" firstAttribute="trailing" secondItem="I8b-wt-vP2" secondAttribute="trailing" id="zh6-hC-RLI"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="balanceLabel" destination="SIq-ya-fBT" id="3ez-Ai-Dpz"/>
-                <outlet property="symbolLabel" destination="dbs-TO-zng" id="u6x-gO-nqs"/>
+                <outlet property="balanceLabel" destination="I8b-wt-vP2" id="Xvk-pe-5Lm"/>
             </connections>
             <point key="canvasLocation" x="-30.534351145038165" y="261.97183098591552"/>
         </view>

@@ -7,10 +7,11 @@
 
 import UIKit
 
-final class CurrencyBalanceCell: UICollectionViewCell {
+final class CurrencyBalanceCell: UICollectionViewCell, ReusableView {
     
-    @IBOutlet weak var symbolLabel: UILabel!
-    @IBOutlet weak var balanceLabel: UILabel!
-    
-    static let id = "CurrencyBalanceCell"
+    @IBOutlet private weak var balanceLabel: UILabel!
+        
+    func getBalanceLabel() -> UILabel {
+        return balanceLabel
+    }
 }

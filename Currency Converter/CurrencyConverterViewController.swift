@@ -9,33 +9,34 @@ import UIKit
 
 final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
     
-    @IBOutlet weak private var sellCurrencyPicker: UIPickerView!
-    @IBOutlet weak private var recieveCurrencyPicker: UIPickerView!
-    @IBOutlet weak private var currencyBalanceCollectionView: UICollectionView!
-    @IBOutlet weak private var sellCurrencyTextField: UITextField!
-    @IBOutlet weak private var recieveCurrencyLabel: UILabel!
+    @IBOutlet private weak var sellCurrencyPicker: UIPickerView!
+    @IBOutlet private weak var recieveCurrencyPicker: UIPickerView!
+    @IBOutlet private weak var currencyBalanceCollectionView: UICollectionView!
+    @IBOutlet private weak var sellCurrencyTextField: UITextField!
+    @IBOutlet private weak var recieveCurrencyLabel: UILabel!
     
     // MARK: - Properties
+    private let debouncer = Debouncer(interval: 0.5)
     
-    let currencySymbols = Currencies.allCases.map { $0.segmentTitle }
-    let currencyBalances: [String] = []
-    
-    var currencyPicker: [Currencies] = []
-    var chosenStateOfsellCurrencyPicker = Currencies.USD.segmentTitle
-    var chosenStateOfrecieveCurrencyPicker = Currencies.USD.segmentTitle
+    private var currencyPicker: [Currencies] = []
+    private var chosenStateOfsellCurrencyPicker = Currencies.USD.segmentTitle
+    private var chosenStateOfrecieveCurrencyPicker = Currencies.USD.segmentTitle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.sellCurrencyPicker.delegate = self
-        self.sellCurrencyPicker.dataSource = self
-        self.recieveCurrencyPicker.delegate = self
-        self.recieveCurrencyPicker.dataSource = self
+                
+        sellCurrencyPicker.delegate = self
+        sellCurrencyPicker.dataSource = self
+        recieveCurrencyPicker.delegate = self
+        recieveCurrencyPicker.dataSource = self
         currencyPicker = Currencies.allCases
         
-        self.currencyBalanceCollectionView.dataSource = self
+        currencyBalanceCollectionView.dataSource = self
         
         sellCurrencyTextField.delegate = self
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.view.addGestureRecognizer(tapGesture)
         
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
     }
@@ -44,7 +45,9 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, let currencyAmount = Double(text) {
-            fetchExchangeRate(amount: currencyAmount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: chosenStateOfrecieveCurrencyPicker)
+            debouncer.call {
+                self.fetchExchangeRate(amount: currencyAmount, fromCurrency: self.chosenStateOfsellCurrencyPicker, toCurrency: self.chosenStateOfrecieveCurrencyPicker)
+            }
         } else if textField.text == "" {
             recieveCurrencyLabel.text = ""
         } else {
@@ -54,7 +57,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     // MARK: - Fetch Exchange Rate
     
-    func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
+    private func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
         ExchangeWorker.worker.run(ExchangeWorker.Body(amount: amount, inputCurrency: fromCurrency, outputCurrency: toCurrency), { [weak self] (result: Result<ExchangeWorker.Output, NetworkError>) in
             switch result {
             case .success(let response):
@@ -72,7 +75,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView.tag == 1 {
+        if pickerView == sellCurrencyPicker {
             return currencyPicker.count
         } else {
             return currencyPicker.count
@@ -80,7 +83,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView.tag == 1 {
+        if pickerView == sellCurrencyPicker {
             chosenStateOfsellCurrencyPicker = currencyPicker[row].segmentTitle
         } else {
             chosenStateOfrecieveCurrencyPicker = currencyPicker[row].segmentTitle
@@ -89,7 +92,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-        if pickerView.tag == 1 {
+        if pickerView == sellCurrencyPicker {
             return "\(currencyPicker[row])"
         } else {
             return "\(currencyPicker[row])"
@@ -99,25 +102,28 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     // MARK: - UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currencySymbols.count
+        return Currencies.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: "CurrencyBalanceCell", for: indexPath) as! CurrencyBalanceCell
+        let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: CurrencyBalanceCell.id, for: indexPath) as! CurrencyBalanceCell
         
-        let currencyBalances = Currencies.allCases.map { $0.segmentTitle }.compactMap { key in
-            return UserDefaults.standard.string(forKey: key)
-        }
+        let currency = Currencies.allCases[indexPath.row]
+        let currencyBalance = UserDefaultsManager.getBalance(for: currency.segmentTitle)
+        let model = CurrencyCellModel(currency: currency, currencyBalance: String(currencyBalance))
         
-        cell.symbolLabel.text = currencySymbols[indexPath.row]
-        cell.balanceLabel.text = String(currencyBalances[indexPath.row])
+        cell.getBalanceLabel().text = "\(model.currencyBalance) \(model.currency)"
         
         return cell
     }
     
     // MARK: - Actions
+    
+    @objc private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        sellCurrencyTextField.resignFirstResponder()
+    }
 
-    @IBAction func submitConversionButton(_ sender: Any) {
+    @IBAction private func submitConversionButton(_ sender: Any) {
         if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
             return
         }
@@ -156,7 +162,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         currencyBalanceCollectionView.reloadData()
     }
     
-    func showAlert(alertText: String, alertMessage: String) {
+    private func showAlert(alertText: String, alertMessage: String) {
         let messageAlert = UIAlertController(title: alertText,
                                              message: alertMessage,
                                              preferredStyle: .alert)
