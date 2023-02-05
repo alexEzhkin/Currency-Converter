@@ -159,8 +159,10 @@
                     </view>
                     <connections>
                         <outlet property="currencyBalanceCollectionView" destination="Jz0-nq-au9" id="fNa-py-iXN"/>
+                        <outlet property="recieveCurrencyLabel" destination="fPR-gg-J4H" id="y0k-Qs-nfP"/>
                         <outlet property="recieveCurrencyPicker" destination="YeC-ls-HQN" id="FZZ-s0-kqW"/>
                         <outlet property="sellCurrencyPicker" destination="FDp-ff-bbe" id="k7G-JY-Tx8"/>
+                        <outlet property="sellCurrencyTextField" destination="zXS-oA-vEU" id="9qU-8K-Jcs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

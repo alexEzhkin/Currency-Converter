@@ -7,20 +7,18 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
     
-    var collectionCellSize: CGSize {
-        let size = 50
-        
-        return CGSize(width: size, height: size)
+    let currencySymbols = CurrencyPickerModel.allCases.map { $0.segmentTitle }
+    let currencyBalances = CurrencyPickerModel.allCases.map { $0.segmentTitle }.compactMap { key in
+        return UserDefaults.standard.string(forKey: key)
     }
-    
-    let currencySymbols = ["$", "€", "¥", "$", "€", "¥", "$", "€", "¥", "$", "€", "¥"]
-    let currencyBalances = [100.0, 200.0, 300.0, 100.0, 200.0, 300.0, 100.0, 200.0, 300.0, 100.0, 200.0, 300.0]
     
     @IBOutlet weak var sellCurrencyPicker: UIPickerView!
     @IBOutlet weak var recieveCurrencyPicker: UIPickerView!
     @IBOutlet weak var currencyBalanceCollectionView: UICollectionView!
+    @IBOutlet weak var sellCurrencyTextField: UITextField!
+    @IBOutlet weak var recieveCurrencyLabel: UILabel!
     
     var pickerData: [CurrencyPickerModel] = []
     
@@ -34,14 +32,20 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         self.recieveCurrencyPicker.delegate = self
         self.recieveCurrencyPicker.dataSource = self
         
-        self.currencyBalanceCollectionView.delegate = self
         self.currencyBalanceCollectionView.dataSource = self
+        
+        sellCurrencyTextField.delegate = self
         
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
         
         pickerData = CurrencyPickerModel.allCases
         
         fetchExchangeRate()
+        UserDefaultsService.shared.getData()
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        recieveCurrencyLabel.text = textField.text
     }
     
     func fetchExchangeRate() {
@@ -73,10 +77,6 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         } else {
             return "\(pickerData[row])"
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            return collectionCellSize
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

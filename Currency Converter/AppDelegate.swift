@@ -14,6 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        UserDefaults.standard.register(defaults: ["USD": 1000.00])
+        UserDefaults.standard.register(defaults: ["EUR": 0.00])
+        UserDefaults.standard.register(defaults: ["JPY": 0.00])
         return true
     }
 
