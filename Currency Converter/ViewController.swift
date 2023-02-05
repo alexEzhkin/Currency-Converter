@@ -124,9 +124,18 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)
         } else {
-            print("You don't have enouth amount")
+            showAlert(alertText: "Conversion Error", alertMessage: "Sorry, but you don't have enough funds to convert from \(chosenStateOfsellCurrencyPicker) to \(chosenStateOfrecieveCurrencyPicker)")
         }
         currencyBalanceCollectionView.reloadData()
+    }
+    
+    func showAlert(alertText: String, alertMessage: String) {
+        let messageAlert = UIAlertController(title: alertText,
+                                                     message: alertMessage,
+                                                     preferredStyle: .alert)
+        let action = UIAlertAction(title: "Done", style: .default)
+        messageAlert.addAction(action)
+        present(messageAlert, animated: true)
     }
 }
 
