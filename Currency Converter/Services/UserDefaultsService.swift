@@ -14,6 +14,17 @@ class UserDefaultsService {
     
     let defaults = UserDefaults.standard
     
+    func getCountOfCurrencyConverions() -> Int {
+        return defaults.integer(forKey: "CurrencyConversions")
+    }
+    
+    func increaseCountOfCurrencyConversions() {
+        var originalValue = defaults.integer(forKey: "CurrencyConversions")
+        originalValue += 1
+        defaults.set(originalValue, forKey: "CurrencyConversions")
+        print(defaults.integer(forKey: "CurrencyConversions"))
+    }
+    
     func getCurrencyBalance(forCurrency: String) -> Double {
         return defaults.double(forKey: forCurrency)
     }

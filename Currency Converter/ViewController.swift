@@ -104,13 +104,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         return cell
     }
+
     @IBAction func submitConversionButton(_ sender: Any) {
         if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
             return
         }
         
         let textFromSellCurrencyTextField = sellCurrencyTextField.text ?? ""
-        let amountForSell = Double(textFromSellCurrencyTextField) ?? 0.0
+        var amountForSell = Double(textFromSellCurrencyTextField) ?? 0.0
         
         let textFromRecieveCurrencyLabel = recieveCurrencyLabel.text ?? ""
         let amountForRecieve = Double(textFromRecieveCurrencyLabel) ?? 0.0
@@ -118,11 +119,20 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         let currentCurrencyBalance = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfsellCurrencyPicker)
         let currentBalanceForRecieveCurrency = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfrecieveCurrencyPicker)
         
+        let countOfCurrencyConversions = UserDefaultsService.shared.getCountOfCurrencyConverions()
+        
         if currentCurrencyBalance >= amountForSell {
+            if countOfCurrencyConversions > 5 {
+                let commissionFee = amountForSell * 0.007
+                showAlert(alertText: "Currency Converted", alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee) \(chosenStateOfsellCurrencyPicker)")
+                amountForSell = amountForSell + commissionFee
+            }
             let newBalanceForSellCurrency = currentCurrencyBalance - amountForSell
             let newBalanceForRecieveCurrency = currentBalanceForRecieveCurrency + amountForRecieve
+            
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)
+            UserDefaultsService.shared.increaseCountOfCurrencyConversions()
         } else {
             showAlert(alertText: "Conversion Error", alertMessage: "Sorry, but you don't have enough funds to convert from \(chosenStateOfsellCurrencyPicker) to \(chosenStateOfrecieveCurrencyPicker)")
         }
@@ -131,8 +141,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     func showAlert(alertText: String, alertMessage: String) {
         let messageAlert = UIAlertController(title: alertText,
-                                                     message: alertMessage,
-                                                     preferredStyle: .alert)
+                                             message: alertMessage,
+                                             preferredStyle: .alert)
         let action = UIAlertAction(title: "Done", style: .default)
         messageAlert.addAction(action)
         present(messageAlert, animated: true)
