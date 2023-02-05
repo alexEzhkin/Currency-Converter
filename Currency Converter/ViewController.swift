@@ -21,7 +21,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     @IBOutlet weak var recieveCurrencyLabel: UILabel!
     
     var pickerData: [CurrencyPickerModel] = []
-    
+    var amountData: Double = 0.00
+    var chosenStateOfsellCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
+    var chosenStateOfrecieveCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,18 +42,22 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         pickerData = CurrencyPickerModel.allCases
         
-        fetchExchangeRate()
         UserDefaultsService.shared.getData()
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        recieveCurrencyLabel.text = textField.text
+        if let text = textField.text, let currencyAmount = Double(text) {
+            fetchExchangeRate(amount: currencyAmount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: chosenStateOfrecieveCurrencyPicker)
+        } else {
+            recieveCurrencyLabel.text = "Invalid Input"
+        }
     }
     
-    func fetchExchangeRate() {
-        NetworkService.shared.getRequest(fromAmount: 340.51, fromCurrency: "EUR", toCurrency: "USD", completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
+    func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
+        NetworkService.shared.getRequest(fromAmount: amount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: toCurrency, completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
             switch result {
             case .success(let response):
+                self?.recieveCurrencyLabel.text = "+ \(response.amount)"
                 print(response.amount)
             case .failure(let error):
                 print(error.localizedDescription)
@@ -68,6 +74,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             return pickerData.count
         } else {
             return pickerData.count
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if pickerView.tag == 1 {
+            chosenStateOfsellCurrencyPicker = pickerData[row].segmentTitle
+        } else {
+            chosenStateOfrecieveCurrencyPicker = pickerData[row].segmentTitle
         }
     }
     
