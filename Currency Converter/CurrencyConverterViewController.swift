@@ -7,22 +7,22 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
+final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
     
-    @IBOutlet weak var sellCurrencyPicker: UIPickerView!
-    @IBOutlet weak var recieveCurrencyPicker: UIPickerView!
-    @IBOutlet weak var currencyBalanceCollectionView: UICollectionView!
-    @IBOutlet weak var sellCurrencyTextField: UITextField!
-    @IBOutlet weak var recieveCurrencyLabel: UILabel!
+    @IBOutlet weak private var sellCurrencyPicker: UIPickerView!
+    @IBOutlet weak private var recieveCurrencyPicker: UIPickerView!
+    @IBOutlet weak private var currencyBalanceCollectionView: UICollectionView!
+    @IBOutlet weak private var sellCurrencyTextField: UITextField!
+    @IBOutlet weak private var recieveCurrencyLabel: UILabel!
     
     // MARK: - Properties
     
-    let currencySymbols = CurrencyPickerModel.allCases.map { $0.segmentTitle }
+    let currencySymbols = Currencies.allCases.map { $0.segmentTitle }
     let currencyBalances: [String] = []
     
-    var currencyPicker: [CurrencyPickerModel] = []
-    var chosenStateOfsellCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
-    var chosenStateOfrecieveCurrencyPicker = CurrencyPickerModel.USD.segmentTitle
+    var currencyPicker: [Currencies] = []
+    var chosenStateOfsellCurrencyPicker = Currencies.USD.segmentTitle
+    var chosenStateOfrecieveCurrencyPicker = Currencies.USD.segmentTitle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +31,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         self.sellCurrencyPicker.dataSource = self
         self.recieveCurrencyPicker.delegate = self
         self.recieveCurrencyPicker.dataSource = self
-        currencyPicker = CurrencyPickerModel.allCases
+        currencyPicker = Currencies.allCases
         
         self.currencyBalanceCollectionView.dataSource = self
         
@@ -55,7 +55,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     // MARK: - Fetch Exchange Rate
     
     func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
-        NetworkService.shared.getRequest(fromAmount: amount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: toCurrency, completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
+        ExchangeWorker.worker.run(ExchangeWorker.Body(amount: amount, inputCurrency: fromCurrency, outputCurrency: toCurrency), { [weak self] (result: Result<ExchangeWorker.Output, NetworkError>) in
             switch result {
             case .success(let response):
                 self?.recieveCurrencyLabel.text = "\(response.amount)"
@@ -105,7 +105,7 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: "CurrencyBalanceCell", for: indexPath) as! CurrencyBalanceCell
         
-        let currencyBalances = CurrencyPickerModel.allCases.map { $0.segmentTitle }.compactMap { key in
+        let currencyBalances = Currencies.allCases.map { $0.segmentTitle }.compactMap { key in
             return UserDefaults.standard.string(forKey: key)
         }
         
@@ -127,10 +127,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         let textFromRecieveCurrencyLabel = recieveCurrencyLabel.text ?? ""
         let amountForRecieve = Double(textFromRecieveCurrencyLabel) ?? 0.0
         
-        let currentCurrencyBalance = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfsellCurrencyPicker)
-        let currentBalanceForRecieveCurrency = UserDefaultsService.shared.getCurrencyBalance(forCurrency: chosenStateOfrecieveCurrencyPicker)
+        let currentCurrencyBalance = UserDefaultsManager.getBalance(for: chosenStateOfsellCurrencyPicker)
+        let currentBalanceForRecieveCurrency = UserDefaultsManager.getBalance(for: chosenStateOfrecieveCurrencyPicker)
         
-        let countOfCurrencyConversions = UserDefaultsService.shared.getCountOfCurrencyConverions()
+        let countOfCurrencyConversions = UserDefaultsManager.currencyConversionsCount
         
         if currentCurrencyBalance >= amountForSell {
             
@@ -144,9 +144,10 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
             let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
             
-            UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
-            UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)
-            UserDefaultsService.shared.increaseCountOfCurrencyConversions()
+            UserDefaultsManager.setBalance(newBalanceForSellCurrency, for: chosenStateOfsellCurrencyPicker)
+            UserDefaultsManager.setBalance(newBalanceForRecieveCurrency, for: chosenStateOfrecieveCurrencyPicker)
+
+            UserDefaultsManager.currencyConversionsCount += 1
             
         } else {
             showAlert(alertText: "Conversion Error",

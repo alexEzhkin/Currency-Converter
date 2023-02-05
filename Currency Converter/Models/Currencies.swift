@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CurrencyPickerModel: Int, CaseIterable {
+enum Currencies: Int, CaseIterable {
     case USD
     case EUR
     case JPY
