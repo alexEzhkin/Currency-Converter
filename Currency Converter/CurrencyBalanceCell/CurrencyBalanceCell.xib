@@ -14,18 +14,18 @@
             <rect key="frame" x="0.0" y="0.0" width="272" height="180"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="W7f-Je-bKx">
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="W7f-Je-bKx">
                     <rect key="frame" x="5" y="54" width="262" height="121"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SIq-ya-fBT">
-                            <rect key="frame" x="0.0" y="0.0" width="41.333333333333336" height="121"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="0.0" y="0.0" width="125.66666666666667" height="121"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="25"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbs-TO-zng">
-                            <rect key="frame" x="220.66666666666666" y="0.0" width="41.333333333333343" height="121"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="130.66666666666663" y="0.0" width="131.33333333333337" height="121"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="25"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -42,8 +42,8 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="balanceLabel" destination="dbs-TO-zng" id="dvb-2j-2vI"/>
-                <outlet property="symbolLabel" destination="SIq-ya-fBT" id="ch2-Ws-O4A"/>
+                <outlet property="balanceLabel" destination="SIq-ya-fBT" id="3ez-Ai-Dpz"/>
+                <outlet property="symbolLabel" destination="dbs-TO-zng" id="u6x-gO-nqs"/>
             </connections>
             <point key="canvasLocation" x="-30.534351145038165" y="261.97183098591552"/>
         </view>
