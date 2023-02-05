@@ -61,12 +61,12 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="120" height="60"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J6E-7s-bQI">
-                                                        <rect key="frame" x="0.0" y="1.6666666666666643" width="60" height="57"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="J6E-7s-bQI" secondAttribute="height" multiplier="1:1" id="2b5-Iu-Wza"/>
                                                             <constraint firstAttribute="height" constant="60" id="d3F-cX-OZs"/>
                                                         </constraints>
-                                                        <imageReference key="image" image="arrow.up.square.fill" catalog="system" symbolScale="default"/>
+                                                        <imageReference key="image" image="up_arrow.png" symbolScale="default"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sell" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BrW-YG-Pwh">
                                                         <rect key="frame" x="60" y="0.0" width="60" height="60"/>
@@ -100,8 +100,8 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="afz-H3-76c">
                                                 <rect key="frame" x="0.0" y="0.0" width="120" height="60"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.down.app.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
-                                                        <rect key="frame" x="0.0" y="1.6666666666666643" width="60" height="57"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down_arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
+                                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="zzN-SE-ZEx" secondAttribute="height" multiplier="1:1" id="CUQ-yW-t2z"/>
                                                             <constraint firstAttribute="height" constant="60" id="KNk-Yr-fdq"/>
@@ -116,16 +116,16 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jl4-is-unq">
-                                                <rect key="frame" x="211.66666666666663" y="0.0" width="141.33333333333337" height="60"/>
+                                                <rect key="frame" x="203" y="0.0" width="150" height="60"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPR-gg-J4H">
-                                                        <rect key="frame" x="0.0" y="0.0" width="41.333333333333336" height="60"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fPR-gg-J4H">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="60"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <pickerView tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YeC-ls-HQN">
-                                                        <rect key="frame" x="41.333333333333343" y="0.0" width="100" height="60"/>
+                                                        <rect key="frame" x="50" y="0.0" width="100" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="100" id="3ZH-Kk-i9P"/>
                                                         </constraints>
@@ -176,8 +176,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="arrow.down.app.fill" catalog="system" width="128" height="114"/>
-        <image name="arrow.up.square.fill" catalog="system" width="128" height="114"/>
+        <image name="down_arrow.png" width="43" height="44"/>
+        <image name="up_arrow.png" width="44" height="41"/>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

@@ -15,6 +15,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     @IBOutlet weak var sellCurrencyTextField: UITextField!
     @IBOutlet weak var recieveCurrencyLabel: UILabel!
     
+    // MARK: - Properties
+    
     let currencySymbols = CurrencyPickerModel.allCases.map { $0.segmentTitle }
     let currencyBalances: [String] = []
     
@@ -27,26 +29,30 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         self.sellCurrencyPicker.delegate = self
         self.sellCurrencyPicker.dataSource = self
-
         self.recieveCurrencyPicker.delegate = self
         self.recieveCurrencyPicker.dataSource = self
+        currencyPicker = CurrencyPickerModel.allCases
         
         self.currencyBalanceCollectionView.dataSource = self
         
         sellCurrencyTextField.delegate = self
         
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
-        
-        currencyPicker = CurrencyPickerModel.allCases
     }
+    
+    // MARK: - Handle Text Field changes
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, let currencyAmount = Double(text) {
             fetchExchangeRate(amount: currencyAmount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: chosenStateOfrecieveCurrencyPicker)
+        } else if textField.text == "" {
+            recieveCurrencyLabel.text = ""
         } else {
             recieveCurrencyLabel.text = "Invalid Input"
         }
     }
+    
+    // MARK: - Fetch Exchange Rate
     
     func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
         NetworkService.shared.getRequest(fromAmount: amount, fromCurrency: chosenStateOfsellCurrencyPicker, toCurrency: toCurrency, completion: { [weak self] (result: Result<CurrencyModel, NetworkError>) in
@@ -58,6 +64,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
             }
         })
     }
+    
+    // MARK: - UIPickerView
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -88,6 +96,8 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         }
     }
     
+    // MARK: - UICollectionView
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return currencySymbols.count
     }
@@ -104,12 +114,13 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
         return cell
     }
+    
+    // MARK: - Actions
 
     @IBAction func submitConversionButton(_ sender: Any) {
         if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
             return
         }
-        
         let textFromSellCurrencyTextField = sellCurrencyTextField.text ?? ""
         var amountForSell = Double(textFromSellCurrencyTextField) ?? 0.0
         
@@ -122,19 +133,24 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         let countOfCurrencyConversions = UserDefaultsService.shared.getCountOfCurrencyConverions()
         
         if currentCurrencyBalance >= amountForSell {
+            
             if countOfCurrencyConversions >= 5 {
                 let commissionFee = amountForSell * 0.007
-                showAlert(alertText: "Currency Converted", alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee.roundTo(places: 2)) \(chosenStateOfsellCurrencyPicker)")
+                showAlert(alertText:"Currency Converted",
+                          alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee.roundTo(places: 2)) \(chosenStateOfsellCurrencyPicker)")
                 amountForSell = amountForSell + commissionFee
             }
+            
             let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
             let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
             
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForSellCurrency, forCurrency: chosenStateOfsellCurrencyPicker)
             UserDefaultsService.shared.changeCurrencyBalance(newBalance: newBalanceForRecieveCurrency, forCurrency: chosenStateOfrecieveCurrencyPicker)
             UserDefaultsService.shared.increaseCountOfCurrencyConversions()
+            
         } else {
-            showAlert(alertText: "Conversion Error", alertMessage: "Sorry, but you don't have enough funds to convert from \(chosenStateOfsellCurrencyPicker) to \(chosenStateOfrecieveCurrencyPicker)")
+            showAlert(alertText: "Conversion Error",
+                      alertMessage: "Sorry, but you don't have enough funds to convert from \(chosenStateOfsellCurrencyPicker) to \(chosenStateOfrecieveCurrencyPicker)")
         }
         currencyBalanceCollectionView.reloadData()
     }
