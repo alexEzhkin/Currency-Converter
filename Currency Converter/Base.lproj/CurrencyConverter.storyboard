@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AsB-YH-BA7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d3V-IL-TAy">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -11,22 +11,22 @@
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
-        <scene sceneID="gVd-GT-FqH">
+        <scene sceneID="na1-4N-SdP">
             <objects>
-                <navigationController id="AsB-YH-BA7" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Xdq-Nk-oLo">
+                <navigationController id="d3V-IL-TAy" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="tZN-Z4-3F4">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="nZG-KG-LfV"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="jbN-16-Rm6"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TEq-eD-YR9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MiA-Po-rkl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-816" y="4"/>
+            <point key="canvasLocation" x="-779" y="4"/>
         </scene>
-        <!--Currency Converter View Controller-->
+        <!--Currency Converter-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="CurrencyConverterViewController" id="BYZ-38-t0r" customClass="CurrencyConverterViewController" customModule="Currency_Converter" customModuleProvider="target" sceneMemberID="viewController">
@@ -177,7 +177,7 @@
                             <constraint firstItem="Jz0-nq-au9" firstAttribute="top" secondItem="OCi-wU-TWc" secondAttribute="bottom" constant="10" id="xVt-2w-cnP"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="flV-UG-oh5"/>
+                    <navigationItem key="navigationItem" title="Currency Converter" id="flV-UG-oh5"/>
                     <connections>
                         <outlet property="currencyBalanceCollectionView" destination="Jz0-nq-au9" id="fNa-py-iXN"/>
                         <outlet property="recieveCurrencyLabel" destination="fPR-gg-J4H" id="y0k-Qs-nfP"/>

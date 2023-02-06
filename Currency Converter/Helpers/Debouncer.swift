@@ -15,15 +15,15 @@ final class Debouncer {
         self.interval = interval
     }
     
+    deinit {
+        timer?.invalidate()
+    }
+    
     func call(callback: @escaping () -> ()) {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false, block: { [weak self] _ in
             callback()
             self?.timer = nil
         })
-    }
-    
-    deinit {
-        timer?.invalidate()
     }
 }

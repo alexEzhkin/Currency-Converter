@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate {
+final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate, UINavigationControllerDelegate {
     
     @IBOutlet private weak var sellCurrencyPicker: UIPickerView!
     @IBOutlet private weak var recieveCurrencyPicker: UIPickerView!
@@ -16,41 +16,59 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     @IBOutlet private weak var recieveCurrencyLabel: UILabel!
     
     // MARK: - Properties
-    private let debouncer = Debouncer(interval: 0.5)
+    var debouncer: Debouncer?
     
     // MARK: - External dependencies
     var exchangeWorker: ExchangeWorker!
     
-    private var currencyPicker: [Currencies] = []
-    private var chosenStateOfsellCurrencyPicker = Currencies.USD.segmentTitle
-    private var chosenStateOfrecieveCurrencyPicker = Currencies.USD.segmentTitle
+    private var currencies: [Currencies] = []
+    private var sellCurrencyPickerState = Currencies.USD.segmentTitle
+    private var recieveCurrencyPickerState = Currencies.USD.segmentTitle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Currency Converter"
+        setUpPickerViews()
+        setUpCollectionView()
+        setUpTextField()
         
+        currencies = Currencies.allCases
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    // MARK: - Setups
+    func setUpPickerViews() {
         sellCurrencyPicker.delegate = self
         sellCurrencyPicker.dataSource = self
         recieveCurrencyPicker.delegate = self
         recieveCurrencyPicker.dataSource = self
-        currencyPicker = Currencies.allCases
-        
+    }
+    
+    func setUpCollectionView() {
         currencyBalanceCollectionView.dataSource = self
-        
-        sellCurrencyTextField.delegate = self
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
-        self.view.addGestureRecognizer(tapGesture)
-        
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
+    }
+    
+    func setUpTextField() {
+        sellCurrencyTextField.delegate = self
     }
     
     // MARK: - Handle Text Field changes
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let endPosition = textField.endOfDocument
+        textField.selectedTextRange = textField.textRange(from: endPosition,
+                                                          to: endPosition)
+    }
+    
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, let currencyAmount = Double(text) {
-            debouncer.call {
-                self.fetchExchangeRate(amount: currencyAmount, fromCurrency: self.chosenStateOfsellCurrencyPicker, toCurrency: self.chosenStateOfrecieveCurrencyPicker)
+            debouncer?.call { [weak self] in
+                guard let self else { return }
+                self.fetchExchangeRate(amount: currencyAmount,
+                                       fromCurrency: self.sellCurrencyPickerState,
+                                       toCurrency: self.recieveCurrencyPickerState)
             }
         } else if textField.text == "" {
             recieveCurrencyLabel.text = ""
@@ -62,7 +80,9 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     // MARK: - Fetch Exchange Rate
     
     private func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
-        exchangeWorker.run(ExchangeWorker.Body(amount: amount, inputCurrency: fromCurrency, outputCurrency: toCurrency), { [weak self] (result: Result<ExchangeWorker.Output, NetworkError>) in
+        exchangeWorker.run(ExchangeWorker.Body(amount: amount,
+                                               inputCurrency: fromCurrency,
+                                               outputCurrency: toCurrency), { [weak self] result in
             switch result {
             case .success(let response):
                 self?.recieveCurrencyLabel.text = "\(response.amount)"
@@ -79,40 +99,35 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == sellCurrencyPicker {
-            return currencyPicker.count
-        } else {
-            return currencyPicker.count
-        }
+        currencies.count
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let segmentTitle = currencies[row].segmentTitle
+        
         if pickerView == sellCurrencyPicker {
-            chosenStateOfsellCurrencyPicker = currencyPicker[row].segmentTitle
+            sellCurrencyPickerState = segmentTitle
         } else {
-            chosenStateOfrecieveCurrencyPicker = currencyPicker[row].segmentTitle
+            recieveCurrencyPickerState = segmentTitle
         }
         textFieldDidChangeSelection(sellCurrencyTextField)
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-        if pickerView == sellCurrencyPicker {
-            return "\(currencyPicker[row])"
-        } else {
-            return "\(currencyPicker[row])"
-        }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        "\(currencies[row])"
     }
     
     // MARK: - UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Currencies.allCases.count
+        currencies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: CurrencyBalanceCell.id, for: indexPath) as! CurrencyBalanceCell
+        let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: CurrencyBalanceCell.id,
+                                                                     for: indexPath) as! CurrencyBalanceCell
         
-        let currency = Currencies.allCases[indexPath.row]
+        let currency = currencies[indexPath.row]
         let currencyBalance = CurrencyUserDefaultsManager.getBalance(for: currency.segmentTitle)
         
         cell.configure(
@@ -130,47 +145,56 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     @IBAction private func submitConversionButton(_ sender: Any) {
-        if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
+        if sellCurrencyPickerState == recieveCurrencyPickerState {
             return
         }
-        let textFromSellCurrencyTextField = sellCurrencyTextField.text ?? ""
-        var amountForSell = Double(textFromSellCurrencyTextField) ?? 0.0
         
-        let textFromRecieveCurrencyLabel = recieveCurrencyLabel.text ?? ""
-        let amountForRecieve = Double(textFromRecieveCurrencyLabel) ?? 0.0
+        var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
+        var amountForRecieve = recieveCurrencyLabel.text.flatMap(Double.init) ?? .zero
         
-        let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: chosenStateOfsellCurrencyPicker)
-        let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: chosenStateOfrecieveCurrencyPicker)
+        let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
+        let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
         
         let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
-        
-        if currentCurrencyBalance >= amountForSell {
-            
-            if countOfCurrencyConversions >= 5 {
-                let commissionFee = amountForSell * 0.007
-                showAlert(alertText:"Currency Converted",
-                          alertMessage: "You have converted \(amountForSell) \(chosenStateOfsellCurrencyPicker) to \(amountForRecieve) \(chosenStateOfrecieveCurrencyPicker). Commission Fee - \(commissionFee.roundTo(places: 2)) \(chosenStateOfsellCurrencyPicker)")
-                amountForSell = amountForSell + commissionFee
-            }
-            
-            let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
-            let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
-            
-            CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency, for: chosenStateOfsellCurrencyPicker)
-            CurrencyUserDefaultsManager.setBalance(newBalanceForRecieveCurrency, for: chosenStateOfrecieveCurrencyPicker)
-            
-            CurrencyUserDefaultsManager.currencyConversionsCount += 1
-            
-        } else {
-            showAlert(alertText: "Conversion Error",
-                      alertMessage: "Sorry, but you don't have enough funds to convert from \(chosenStateOfsellCurrencyPicker) to \(chosenStateOfrecieveCurrencyPicker)")
+                
+        guard currentCurrencyBalance >= amountForSell else {
+            return showConversionErrorAlert()
         }
+        
+        if countOfCurrencyConversions >= 5 {
+            let commissionFee = amountForSell * 0.007
+            showComissionFeeAlert(sellAmount: amountForSell,
+                                  recieveAmount: amountForRecieve,
+                                  commissionFee: commissionFee)
+            amountForSell = amountForSell + commissionFee
+        }
+        
+        let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
+        let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
+        
+        CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency,
+                                               for: sellCurrencyPickerState)
+        CurrencyUserDefaultsManager.setBalance(newBalanceForRecieveCurrency,
+                                               for: recieveCurrencyPickerState)
+        CurrencyUserDefaultsManager.currencyConversionsCount += 1
+        
         currencyBalanceCollectionView.reloadData()
     }
     
-    private func showAlert(alertText: String, alertMessage: String) {
-        let messageAlert = UIAlertController(title: alertText,
-                                             message: alertMessage,
+    // MARK: - Alerts
+    
+    private func showComissionFeeAlert(sellAmount: Double, recieveAmount: Double, commissionFee: Double) {
+        let messageAlert = UIAlertController(title: "Currency Converted",
+                                             message: "You have converted \(sellAmount) \(sellCurrencyPickerState) to \(recieveAmount) \(recieveCurrencyPickerState). Commission Fee - \(commissionFee.roundTo(places: 2)) \(sellCurrencyPickerState)",
+                                             preferredStyle: .alert)
+        let action = UIAlertAction(title: "Done", style: .default)
+        messageAlert.addAction(action)
+        present(messageAlert, animated: true)
+    }
+    
+    private func showConversionErrorAlert() {
+        let messageAlert = UIAlertController(title: "Conversion Error",
+                                             message: "Sorry, but you don't have enough funds to convert from \(sellCurrencyPickerState) to \(recieveCurrencyPickerState)",
                                              preferredStyle: .alert)
         let action = UIAlertAction(title: "Done", style: .default)
         messageAlert.addAction(action)

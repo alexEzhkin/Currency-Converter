@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        self.window = CurrencyWindowManager.setupInitialViewController(exchangeWorkerRequest: .currency)
+        self.window = CurrencyWindowManager.setupInitialViewController(exchangeWorkerRequest: .currency, debouncerInterval: 0.5)
         
         let initialCurrencyBalance = [CurrencyUserDefaultsManager.currencyConversionsKey: 0,
                                       Currencies.USD.segmentTitle: 1000.00,
