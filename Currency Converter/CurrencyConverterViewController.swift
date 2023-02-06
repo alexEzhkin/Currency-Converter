@@ -24,6 +24,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Currency Converter"
         
         sellCurrencyPicker.delegate = self
         sellCurrencyPicker.dataSource = self

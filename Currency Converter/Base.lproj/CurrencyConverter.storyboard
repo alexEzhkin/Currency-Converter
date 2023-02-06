@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AsB-YH-BA7">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -10,6 +10,22 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="gVd-GT-FqH">
+            <objects>
+                <navigationController id="AsB-YH-BA7" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Xdq-Nk-oLo">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="nZG-KG-LfV"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TEq-eD-YR9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-816" y="4"/>
+        </scene>
         <!--Currency Converter View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -19,13 +35,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MY BALANCES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OCi-wU-TWc">
-                                <rect key="frame" x="20" y="79" width="353" height="18"/>
+                                <rect key="frame" x="20" y="108" width="353" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" systemColor="systemGrayColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jz0-nq-au9">
-                                <rect key="frame" x="20" y="117" width="343" height="59"/>
+                                <rect key="frame" x="20" y="146" width="353" height="30"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="04j-Ea-yui">
                                     <size key="itemSize" width="100" height="15"/>
@@ -35,18 +51,17 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="Rln-zP-tDH" customClass="CurrencyBalanceCell" customModule="Currency_Converter" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="7" width="83" height="45"/>
+                                        <rect key="frame" x="0.0" y="7.666666666666667" width="100" height="15"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Y2p-Fm-dzz">
-                                            <rect key="frame" x="0.0" y="0.0" width="83" height="45"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="83" height="45"/>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="PD7-x6-c7G">
-                                <rect key="frame" x="20" y="163" width="353" height="255"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PD7-x6-c7G">
+                                <rect key="frame" x="20" y="173" width="353" height="270"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CURRENCY EXCHANGE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M5K-Ki-VAu">
                                         <rect key="frame" x="0.0" y="0.0" width="353" height="60"/>
@@ -55,10 +70,10 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Wts-1F-Zza">
-                                        <rect key="frame" x="0.0" y="65" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="70" width="353" height="60"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="bg6-NK-s9I">
-                                                <rect key="frame" x="0.0" y="0.0" width="120" height="60"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="bg6-NK-s9I">
+                                                <rect key="frame" x="0.0" y="0.0" width="125" height="60"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J6E-7s-bQI">
                                                         <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
@@ -69,7 +84,7 @@
                                                         <imageReference key="image" image="up_arrow.png" symbolScale="default"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sell" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BrW-YG-Pwh">
-                                                        <rect key="frame" x="60" y="0.0" width="60" height="60"/>
+                                                        <rect key="frame" x="65" y="0.0" width="60" height="60"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -77,15 +92,15 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GZZ-uh-4s9">
-                                                <rect key="frame" x="128" y="0.0" width="225" height="60"/>
+                                                <rect key="frame" x="140" y="0.0" width="213" height="60"/>
                                                 <subviews>
-                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="type the amount" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zXS-oA-vEU">
-                                                        <rect key="frame" x="0.0" y="0.0" width="125" height="60"/>
+                                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="amount for sell" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zXS-oA-vEU">
+                                                        <rect key="frame" x="0.0" y="0.0" width="113" height="60"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                     </textField>
                                                     <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FDp-ff-bbe">
-                                                        <rect key="frame" x="125" y="0.0" width="100" height="60"/>
+                                                        <rect key="frame" x="113" y="0.0" width="100" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="100" id="epU-qe-x1N"/>
                                                         </constraints>
@@ -95,10 +110,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="6yp-ws-xbB">
-                                        <rect key="frame" x="0.0" y="130" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="140" width="353" height="60"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="afz-H3-76c">
-                                                <rect key="frame" x="0.0" y="0.0" width="120" height="60"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="afz-H3-76c">
+                                                <rect key="frame" x="0.0" y="0.0" width="125" height="60"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down_arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
                                                         <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
@@ -108,7 +123,7 @@
                                                         </constraints>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recieve" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fb8-CH-LTe">
-                                                        <rect key="frame" x="60" y="0.0" width="60" height="60"/>
+                                                        <rect key="frame" x="65" y="0.0" width="60" height="60"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -135,7 +150,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wf4-WF-s7G">
-                                        <rect key="frame" x="0.0" y="195" width="353" height="60"/>
+                                        <rect key="frame" x="0.0" y="210" width="353" height="60"/>
                                         <color key="backgroundColor" systemColor="linkColor"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
@@ -150,18 +165,19 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PD7-x6-c7G" secondAttribute="trailing" constant="20" id="1c1-9C-47q"/>
-                            <constraint firstItem="PD7-x6-c7G" firstAttribute="top" secondItem="Jz0-nq-au9" secondAttribute="bottom" constant="20" id="7dz-Fe-pjW"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Jz0-nq-au9" secondAttribute="trailing" constant="20" id="DPd-Lk-mQP"/>
                             <constraint firstItem="OCi-wU-TWc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="DdS-Pn-fIC"/>
-                            <constraint firstItem="Jz0-nq-au9" firstAttribute="top" secondItem="OCi-wU-TWc" secondAttribute="bottom" constant="20" id="MKn-tB-MiN"/>
-                            <constraint firstItem="OCi-wU-TWc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="RwQ-xI-ZJi"/>
-                            <constraint firstItem="Jz0-nq-au9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="VqZ-Hv-6RU"/>
-                            <constraint firstItem="PD7-x6-c7G" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="oWe-pw-oWz"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="PD7-x6-c7G" secondAttribute="bottom" constant="400" id="rO4-G1-cHD"/>
+                            <constraint firstItem="PD7-x6-c7G" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="G2g-oG-wm2"/>
+                            <constraint firstItem="PD7-x6-c7G" firstAttribute="top" secondItem="Jz0-nq-au9" secondAttribute="bottom" id="MdJ-Xp-o4p"/>
+                            <constraint firstItem="Jz0-nq-au9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="RW2-Bj-dX2"/>
+                            <constraint firstItem="OCi-wU-TWc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="5" id="RwQ-xI-ZJi"/>
+                            <constraint firstItem="PD7-x6-c7G" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" priority="999" constant="70" id="dU1-M4-uMJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PD7-x6-c7G" secondAttribute="trailing" constant="20" id="uCQ-en-aUV"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="OCi-wU-TWc" secondAttribute="trailing" constant="20" id="woU-aE-etW"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Jz0-nq-au9" secondAttribute="trailing" constant="20" id="xcI-f9-tYV"/>
+                            <constraint firstItem="Jz0-nq-au9" firstAttribute="top" secondItem="OCi-wU-TWc" secondAttribute="bottom" constant="10" id="xVt-2w-cnP"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="flV-UG-oh5"/>
                     <connections>
                         <outlet property="currencyBalanceCollectionView" destination="Jz0-nq-au9" id="fNa-py-iXN"/>
                         <outlet property="recieveCurrencyLabel" destination="fPR-gg-J4H" id="y0k-Qs-nfP"/>
