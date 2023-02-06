@@ -18,6 +18,9 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     // MARK: - Properties
     private let debouncer = Debouncer(interval: 0.5)
     
+    // MARK: - External dependencies
+    var exchangeWorker: ExchangeWorker!
+    
     private var currencyPicker: [Currencies] = []
     private var chosenStateOfsellCurrencyPicker = Currencies.USD.segmentTitle
     private var chosenStateOfrecieveCurrencyPicker = Currencies.USD.segmentTitle
@@ -59,7 +62,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     // MARK: - Fetch Exchange Rate
     
     private func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
-        ExchangeWorker.worker.run(ExchangeWorker.Body(amount: amount, inputCurrency: fromCurrency, outputCurrency: toCurrency), { [weak self] (result: Result<ExchangeWorker.Output, NetworkError>) in
+        exchangeWorker.run(ExchangeWorker.Body(amount: amount, inputCurrency: fromCurrency, outputCurrency: toCurrency), { [weak self] (result: Result<ExchangeWorker.Output, NetworkError>) in
             switch result {
             case .success(let response):
                 self?.recieveCurrencyLabel.text = "\(response.amount)"
@@ -110,10 +113,12 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         let cell = currencyBalanceCollectionView.dequeueReusableCell(withReuseIdentifier: CurrencyBalanceCell.id, for: indexPath) as! CurrencyBalanceCell
         
         let currency = Currencies.allCases[indexPath.row]
-        let currencyBalance = UserDefaultsManager.getBalance(for: currency.segmentTitle)
-        let model = CurrencyCellModel(currency: currency, currencyBalance: String(currencyBalance))
+        let currencyBalance = CurrencyUserDefaultsManager.getBalance(for: currency.segmentTitle)
         
-        cell.getBalanceLabel().text = "\(model.currencyBalance) \(model.currency)"
+        cell.configure(
+            model: CurrencyBalanceCell.Model(
+                currency: currency,
+                currencyBalance: currencyBalance))
         
         return cell
     }
@@ -134,10 +139,10 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         let textFromRecieveCurrencyLabel = recieveCurrencyLabel.text ?? ""
         let amountForRecieve = Double(textFromRecieveCurrencyLabel) ?? 0.0
         
-        let currentCurrencyBalance = UserDefaultsManager.getBalance(for: chosenStateOfsellCurrencyPicker)
-        let currentBalanceForRecieveCurrency = UserDefaultsManager.getBalance(for: chosenStateOfrecieveCurrencyPicker)
+        let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: chosenStateOfsellCurrencyPicker)
+        let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: chosenStateOfrecieveCurrencyPicker)
         
-        let countOfCurrencyConversions = UserDefaultsManager.currencyConversionsCount
+        let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
         
         if currentCurrencyBalance >= amountForSell {
             
@@ -151,10 +156,10 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
             let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: 2)
             let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: 2)
             
-            UserDefaultsManager.setBalance(newBalanceForSellCurrency, for: chosenStateOfsellCurrencyPicker)
-            UserDefaultsManager.setBalance(newBalanceForRecieveCurrency, for: chosenStateOfrecieveCurrencyPicker)
+            CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency, for: chosenStateOfsellCurrencyPicker)
+            CurrencyUserDefaultsManager.setBalance(newBalanceForRecieveCurrency, for: chosenStateOfrecieveCurrencyPicker)
             
-            UserDefaultsManager.currencyConversionsCount += 1
+            CurrencyUserDefaultsManager.currencyConversionsCount += 1
             
         } else {
             showAlert(alertText: "Conversion Error",

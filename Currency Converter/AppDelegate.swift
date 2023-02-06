@@ -15,7 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        UserDefaultsManager.registerInitialDefaults(["CurrencyConversions": 0, "USD": 1000.00, "EUR": 0.00, "JPY": 0.00])
+        self.window = CurrencyWindowManager.setupInitialViewController(exchangeWorkerRequest: .currency)
+        
+        let initialCurrencyBalance = [CurrencyUserDefaultsManager.currencyConversionsKey: 0,
+                                      Currencies.USD.segmentTitle: 1000.00,
+                                      Currencies.EUR.segmentTitle: 0.00,
+                                      Currencies.JPY.segmentTitle: 0.00]
+        CurrencyUserDefaultsManager.registerInitialDefaults(initialCurrencyBalance)
+        
         return true
     }
 }

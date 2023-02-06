@@ -25,7 +25,7 @@ struct ExchangeWorker {
 
 extension ExchangeWorker {
     
-    static var worker: Self {
+    static var currency: Self {
         Self { input, completion in
             let stringUrl = "http://api.evp.lt/currency/commercial/exchange/\(input.amount)-\(input.inputCurrency)/\(input.outputCurrency)/latest"
             

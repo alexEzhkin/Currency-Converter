@@ -10,8 +10,16 @@ import UIKit
 final class CurrencyBalanceCell: UICollectionViewCell, ReusableView {
     
     @IBOutlet private weak var balanceLabel: UILabel!
-        
-    func getBalanceLabel() -> UILabel {
-        return balanceLabel
+}
+
+extension CurrencyBalanceCell {
+    
+    struct Model {
+        let currency: Currencies
+        let currencyBalance: Double
+    }
+    
+    func configure(model: Model) {
+        balanceLabel.text = "\(String(model.currencyBalance)) \(model.currency)"
     }
 }

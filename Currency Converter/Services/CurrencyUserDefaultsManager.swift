@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct UserDefaultsManager {
-    static let userDefaults = UserDefaults.standard
+struct CurrencyUserDefaultsManager {
+    private static let userDefaults = UserDefaults.standard
     
     static let currencyConversionsKey = "CurrencyConversions"
     
@@ -19,7 +19,7 @@ struct UserDefaultsManager {
     }
     
     static func getBalance(for currency: String) -> Double {
-        return userDefaults.double(forKey: currency)
+        userDefaults.double(forKey: currency)
     }
     
     static func setBalance(_ balance: Double, for currency: String) {
