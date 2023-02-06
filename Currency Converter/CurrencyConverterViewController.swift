@@ -24,7 +24,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         sellCurrencyPicker.delegate = self
         sellCurrencyPicker.dataSource = self
         recieveCurrencyPicker.delegate = self
@@ -34,7 +34,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         currencyBalanceCollectionView.dataSource = self
         
         sellCurrencyTextField.delegate = self
-
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
         
@@ -122,7 +122,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     @objc private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         sellCurrencyTextField.resignFirstResponder()
     }
-
+    
     @IBAction private func submitConversionButton(_ sender: Any) {
         if chosenStateOfsellCurrencyPicker == chosenStateOfrecieveCurrencyPicker {
             return
@@ -152,7 +152,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
             
             UserDefaultsManager.setBalance(newBalanceForSellCurrency, for: chosenStateOfsellCurrencyPicker)
             UserDefaultsManager.setBalance(newBalanceForRecieveCurrency, for: chosenStateOfrecieveCurrencyPicker)
-
+            
             UserDefaultsManager.currencyConversionsCount += 1
             
         } else {
