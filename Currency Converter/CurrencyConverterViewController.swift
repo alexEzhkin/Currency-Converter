@@ -31,7 +31,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         setUpPickerViews()
         setUpCollectionView()
         setUpTextField()
-        configurateUIElemtns()
+        configurateUIElements()
         
         currencies = Currencies.allCases
                 
@@ -57,12 +57,17 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         recieveCurrencyTextField.isEnabled = false
     }
     
-    func configurateUIElemtns() {
+    func configurateUIElements() {
         submitButton.layer.cornerRadius = submitButton.frame.height/2
         submitButton.layer.shadowColor = UIColor.gray.cgColor
         submitButton.layer.shadowRadius = 2.0
         submitButton.layer.shadowOpacity = 0.5
         submitButton.layer.shadowOffset = CGSize(width: 3, height: 2)
+        
+        self.navigationItem.title = "Currency Converter"
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.backgroundColor = UIColor(rgb: 0x0198DA)
+        self.navigationController?.setStatusBar(backgroundColor: UIColor(rgb: 0x0198DA))
     }
     
     // MARK: - Handle Text Field changes
