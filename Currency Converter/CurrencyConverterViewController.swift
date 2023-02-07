@@ -14,6 +14,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     @IBOutlet private weak var currencyBalanceCollectionView: UICollectionView!
     @IBOutlet private weak var sellCurrencyTextField: UITextField!
     @IBOutlet private weak var recieveCurrencyLabel: UILabel!
+    @IBOutlet weak var submitButton: UIButton!
     
     // MARK: - Properties
     var debouncer: Debouncer?
@@ -30,9 +31,10 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         setUpPickerViews()
         setUpCollectionView()
         setUpTextField()
+        configurateUIElemtns()
         
         currencies = Currencies.allCases
-        
+                
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
     }
@@ -52,6 +54,10 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     func setUpTextField() {
         sellCurrencyTextField.delegate = self
+    }
+    
+    func configurateUIElemtns() {
+        submitButton.layer.cornerRadius = submitButton.frame.height/2
     }
     
     // MARK: - Handle Text Field changes
