@@ -10,7 +10,14 @@ import Foundation
 struct CurrencyUserDefaultsManager {
     private static let userDefaults = UserDefaults.standard
     
-    static let currencyConversionsKey = "CurrencyConversions"
+    private static let currencyConversionsKey = "CurrencyConversions"
+    
+    static func registerInitialDefaults() {
+        userDefaults.register(defaults: [currencyConversionsKey : 0])
+        userDefaults.register(defaults: [Currencies.USD.segmentTitle : 1000.00])
+        userDefaults.register(defaults: [Currencies.EUR.segmentTitle : 0.00])
+        userDefaults.register(defaults: [Currencies.JPY.segmentTitle: 0.00])
+    }
     
     static var currencyConversionsCount = userDefaults.integer(forKey: currencyConversionsKey) {
         didSet {
@@ -24,9 +31,5 @@ struct CurrencyUserDefaultsManager {
     
     static func setBalance(_ balance: Double, for currency: String) {
         userDefaults.set(balance, forKey: currency)
-    }
-    
-    static func registerInitialDefaults(_ defaultValues: [String: Any]) {
-        userDefaults.register(defaults: defaultValues)
     }
 }
