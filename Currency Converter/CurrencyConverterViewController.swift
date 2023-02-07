@@ -13,7 +13,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     @IBOutlet private weak var recieveCurrencyPicker: UIPickerView!
     @IBOutlet private weak var currencyBalanceCollectionView: UICollectionView!
     @IBOutlet private weak var sellCurrencyTextField: UITextField!
-    @IBOutlet private weak var recieveCurrencyLabel: UILabel!
+    @IBOutlet private weak var recieveCurrencyTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
     
     // MARK: - Properties
@@ -54,10 +54,15 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     func setUpTextField() {
         sellCurrencyTextField.delegate = self
+        recieveCurrencyTextField.isEnabled = false
     }
     
     func configurateUIElemtns() {
         submitButton.layer.cornerRadius = submitButton.frame.height/2
+        submitButton.layer.shadowColor = UIColor.gray.cgColor
+        submitButton.layer.shadowRadius = 2.0
+        submitButton.layer.shadowOpacity = 0.5
+        submitButton.layer.shadowOffset = CGSize(width: 3, height: 2)
     }
     
     // MARK: - Handle Text Field changes
@@ -77,9 +82,9 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
                                        toCurrency: self.recieveCurrencyPickerState)
             }
         } else if textField.text == "" {
-            recieveCurrencyLabel.text = ""
+            recieveCurrencyTextField.text = ""
         } else {
-            recieveCurrencyLabel.text = "Invalid Input"
+            recieveCurrencyTextField.text = "Invalid Input"
         }
     }
     
@@ -91,7 +96,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
                                                outputCurrency: toCurrency), { [weak self] result in
             switch result {
             case .success(let response):
-                self?.recieveCurrencyLabel.text = "\(response.amount)"
+                self?.recieveCurrencyTextField.text = "\(response.amount)"
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -156,7 +161,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         }
         
         var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
-        var amountForRecieve = recieveCurrencyLabel.text.flatMap(Double.init) ?? .zero
+        var amountForRecieve = recieveCurrencyTextField.text.flatMap(Double.init) ?? .zero
         
         let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
         let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
