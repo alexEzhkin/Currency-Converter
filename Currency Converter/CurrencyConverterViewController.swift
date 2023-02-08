@@ -9,6 +9,8 @@ import UIKit
 
 final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate, UINavigationControllerDelegate {
     
+    // MARK: - UI Elements
+    
     @IBOutlet private weak var sellCurrencyPicker: UIPickerView!
     @IBOutlet private weak var recieveCurrencyPicker: UIPickerView!
     @IBOutlet private weak var currencyBalanceCollectionView: UICollectionView!
@@ -22,8 +24,12 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     var debouncer: Debouncer!
     var currencies: [Currencies] = []
     
+    // MARK: - Properties
+    
     private lazy var sellCurrencyPickerState = currencies.first?.segmentTitle ?? ""
     private lazy var recieveCurrencyPickerState = currencies.first?.segmentTitle ?? ""
+    
+    //MARK: - Override methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,24 +43,24 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     // MARK: - Setups
     
-    func setUpPickerViews() {
+    private func setUpPickerViews() {
         sellCurrencyPicker.delegate = self
         sellCurrencyPicker.dataSource = self
         recieveCurrencyPicker.delegate = self
         recieveCurrencyPicker.dataSource = self
     }
     
-    func setUpCollectionView() {
+    private func setUpCollectionView() {
         currencyBalanceCollectionView.dataSource = self
         currencyBalanceCollectionView.register(UINib(nibName: "CurrencyBalanceCell", bundle: nil), forCellWithReuseIdentifier: CurrencyBalanceCell.id)
     }
     
-    func setUpTextField() {
+    private func setUpTextField() {
         sellCurrencyTextField.delegate = self
         recieveCurrencyTextField.isEnabled = false
     }
     
-    func setUpButton() {
+    private func setUpButton() {
         submitButton.layer.cornerRadius = submitButton.frame.height/2
         submitButton.layer.shadowColor = UIColor.gray.cgColor
         submitButton.layer.shadowRadius = 2.0
@@ -62,7 +68,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         submitButton.layer.shadowOffset = CGSize(width: 3, height: 2)
     }
     
-    func setUpNavigationBar() {
+    private func setUpNavigationBar() {
         let navigationBarColor = UIColor(red: CGFloat(1/255.0), green: CGFloat(152/255.0), blue: CGFloat(218/255.0), alpha: CGFloat(1.0))
         
         self.navigationItem.title = "Currency Converter"
@@ -71,7 +77,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         self.navigationController?.setStatusBar(backgroundColor: navigationBarColor)
     }
     
-    func setUpView() {
+    private func setUpView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
     }
@@ -180,28 +186,26 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         
         var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
         let amountForRecieve = recieveCurrencyTextField.text.flatMap(Double.init) ?? .zero
-        let commissionFee = amountForSell * 0.007
-        let roundedPlaces = 2
+        let commissionFee = amountForSell * Constants.commissionAmount
         
         let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
         let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
         
         let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
         
-        
-        guard (countOfCurrencyConversions <= 5 && currentCurrencyBalance >= amountForSell) || (countOfCurrencyConversions >= 5 && currentCurrencyBalance >=  (amountForSell+commissionFee)) else {
+        guard (countOfCurrencyConversions <= Constants.numberOfFreeConversions && currentCurrencyBalance >= amountForSell) || (countOfCurrencyConversions >= Constants.numberOfFreeConversions && currentCurrencyBalance >=  (amountForSell+commissionFee)) else {
             return showConversionErrorAlert()
         }
         
-        if countOfCurrencyConversions >= 5 {
+        if countOfCurrencyConversions >= Constants.numberOfFreeConversions {
             showComissionFeeAlert(sellAmount: amountForSell,
                                   recieveAmount: amountForRecieve,
                                   commissionFee: commissionFee)
             amountForSell = amountForSell + commissionFee
         }
         
-        let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: roundedPlaces)
-        let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: roundedPlaces)
+        let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: Constants.roundedPlace)
+        let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: Constants.roundedPlace)
         
         CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency,
                                                for: sellCurrencyPickerState)
@@ -216,7 +220,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     private func showComissionFeeAlert(sellAmount: Double, recieveAmount: Double, commissionFee: Double) {
         let messageAlert = UIAlertController(title: "Currency Converted",
-                                             message: "You have converted \(sellAmount) \(sellCurrencyPickerState) to \(recieveAmount) \(recieveCurrencyPickerState). Commission Fee - \(commissionFee.roundTo(places: 2)) \(sellCurrencyPickerState)",
+                                             message: "You have converted \(sellAmount) \(sellCurrencyPickerState) to \(recieveAmount) \(recieveCurrencyPickerState). Commission Fee - \(commissionFee.roundTo(places: Constants.roundedPlace)) \(sellCurrencyPickerState)",
                                              preferredStyle: .alert)
         let action = UIAlertAction(title: "Done", style: .default)
         messageAlert.addAction(action)
@@ -230,6 +234,15 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         let action = UIAlertAction(title: "Done", style: .default)
         messageAlert.addAction(action)
         present(messageAlert, animated: true)
+    }
+}
+
+private extension CurrencyConverterViewController {
+    
+    enum Constants {
+        static let numberOfFreeConversions = 5
+        static let commissionAmount = 0.007
+        static let roundedPlace = 2
     }
 }
 
