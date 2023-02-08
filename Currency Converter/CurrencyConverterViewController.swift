@@ -21,7 +21,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     var exchangeWorker: ExchangeWorker!
     var debouncer: Debouncer!
     var currencies: [Currencies] = []
-        
+    
     private lazy var sellCurrencyPickerState = currencies.first?.segmentTitle ?? ""
     private lazy var recieveCurrencyPickerState = currencies.first?.segmentTitle ?? ""
     
@@ -86,7 +86,6 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, let currencyAmount = Double(text) {
-
             fetchExchangeRate(amount: currencyAmount,
                               fromCurrency: self.sellCurrencyPickerState,
                               toCurrency: self.recieveCurrencyPickerState)
@@ -188,7 +187,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
         
         let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
-                
+        
         guard currentCurrencyBalance >= amountForSell && currentCurrencyBalance >= (amountForSell+commissionFee) else {
             return showConversionErrorAlert()
         }
@@ -199,7 +198,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
                                   commissionFee: commissionFee)
             amountForSell = amountForSell + commissionFee
         }
-                
+        
         let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: roundedPlaces)
         let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: roundedPlaces)
         

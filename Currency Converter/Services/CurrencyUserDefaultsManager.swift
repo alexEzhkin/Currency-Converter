@@ -14,8 +14,8 @@ struct CurrencyUserDefaultsManager {
     
     static func registerInitialDefaults() {
         userDefaults.register(defaults: [currencyConversionsKey : 0])
-        userDefaults.register(defaults: [Currencies.USD.segmentTitle : 1000.00])
-        userDefaults.register(defaults: [Currencies.EUR.segmentTitle : 0.00])
+        userDefaults.register(defaults: [Currencies.EUR.segmentTitle : 1000.00])
+        userDefaults.register(defaults: [Currencies.USD.segmentTitle : 0.00])
         userDefaults.register(defaults: [Currencies.JPY.segmentTitle: 0.00])
     }
     

@@ -8,8 +8,8 @@
 import Foundation
 
 enum Currencies: Int, CaseIterable {
-    case USD
     case EUR
+    case USD
     case JPY
     
     var segmentIndex: Int {
