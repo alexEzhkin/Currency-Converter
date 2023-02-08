@@ -188,7 +188,8 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         
         let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
         
-        guard currentCurrencyBalance >= amountForSell && currentCurrencyBalance >= (amountForSell+commissionFee) else {
+        
+        guard (countOfCurrencyConversions <= 5 && currentCurrencyBalance >= amountForSell) || (countOfCurrencyConversions >= 5 && currentCurrencyBalance >=  (amountForSell+commissionFee)) else {
             return showConversionErrorAlert()
         }
         
