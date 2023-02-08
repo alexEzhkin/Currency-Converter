@@ -86,7 +86,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if let text = textField.text, let currencyAmount = Double(text) {
-            
+
             fetchExchangeRate(amount: currencyAmount,
                               fromCurrency: self.sellCurrencyPickerState,
                               toCurrency: self.recieveCurrencyPickerState)
@@ -107,7 +107,11 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
                                                         outputCurrency: toCurrency), { [weak self] result in
                 switch result {
                 case .success(let response):
-                    self?.recieveCurrencyTextField.text = "\(response.amount)"
+                    if self?.sellCurrencyTextField.text?.isEmpty == true {
+                        self?.recieveCurrencyTextField.text = ""
+                        return
+                    }
+                    self?.recieveCurrencyTextField.text = "+\(response.amount)"
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
@@ -154,11 +158,12 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         guard let currency = currencies[safe: indexPath.row] else { return cell }
         
         let currencyBalance = CurrencyUserDefaultsManager.getBalance(for: currency.segmentTitle)
+        let formattedCurrencyBalance = String(format: "%.2f", currencyBalance)
         
         cell.configure(
             model: CurrencyBalanceCell.Model(
                 currency: currency,
-                currencyBalance: currencyBalance))
+                currencyBalance: formattedCurrencyBalance))
         
         return cell
     }
@@ -176,26 +181,25 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         
         var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
         let amountForRecieve = recieveCurrencyTextField.text.flatMap(Double.init) ?? .zero
+        let commissionFee = amountForSell * 0.007
+        let roundedPlaces = 2
         
         let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
         let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
         
         let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
-        
-        guard currentCurrencyBalance >= amountForSell else {
+                
+        guard currentCurrencyBalance >= amountForSell && currentCurrencyBalance >= (amountForSell+commissionFee) else {
             return showConversionErrorAlert()
         }
         
         if countOfCurrencyConversions >= 5 {
-            let commissionFee = amountForSell * 0.007
             showComissionFeeAlert(sellAmount: amountForSell,
                                   recieveAmount: amountForRecieve,
                                   commissionFee: commissionFee)
             amountForSell = amountForSell + commissionFee
         }
-        
-        let roundedPlaces = 2
-        
+                
         let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: roundedPlaces)
         let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: roundedPlaces)
         

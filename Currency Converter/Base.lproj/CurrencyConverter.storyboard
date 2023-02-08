@@ -74,13 +74,19 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="bg6-NK-s9I">
                                         <rect key="frame" x="0.0" y="70" width="378" height="60"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J6E-7s-bQI">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qvi-Fb-mdJ">
+                                                <rect key="frame" x="0.0" y="1" width="60" height="58.666666666666671"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="J6E-7s-bQI" secondAttribute="height" multiplier="1:1" id="2b5-Iu-Wza"/>
-                                                    <constraint firstAttribute="height" constant="60" id="d3F-cX-OZs"/>
+                                                    <constraint firstAttribute="height" constant="60" id="XBX-fQ-OdN"/>
+                                                    <constraint firstAttribute="width" secondItem="qvi-Fb-mdJ" secondAttribute="height" multiplier="1:1" id="ov0-Pe-3UW"/>
                                                 </constraints>
-                                                <imageReference key="image" image="up_arrow.png" symbolScale="default"/>
+                                                <imageReference key="image" image="arrow.up.circle.fill" catalog="system" renderingMode="hierarchical">
+                                                    <hierarchicalColors>
+                                                        <color systemColor="systemBackgroundColor"/>
+                                                        <color systemColor="systemGreenColor"/>
+                                                        <color systemColor="systemRedColor"/>
+                                                    </hierarchicalColors>
+                                                </imageReference>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jWV-pV-h3v">
                                                 <rect key="frame" x="65" y="0.0" width="313" height="60"/>
@@ -121,12 +127,19 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="afz-H3-76c">
                                         <rect key="frame" x="0.0" y="140" width="378" height="60"/>
                                         <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down_arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
+                                                <rect key="frame" x="0.0" y="1" width="60" height="58.666666666666671"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="zzN-SE-ZEx" secondAttribute="height" multiplier="1:1" id="CUQ-yW-t2z"/>
                                                     <constraint firstAttribute="height" constant="60" id="KNk-Yr-fdq"/>
                                                 </constraints>
+                                                <imageReference key="image" image="arrow.down.circle.fill" catalog="system" renderingMode="hierarchical">
+                                                    <hierarchicalColors>
+                                                        <color systemColor="systemBackgroundColor"/>
+                                                        <color systemColor="systemGreenColor"/>
+                                                        <color systemColor="systemGreenColor"/>
+                                                    </hierarchicalColors>
+                                                </imageReference>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="A5g-37-HpM">
                                                 <rect key="frame" x="65" y="0.0" width="313" height="60"/>
@@ -142,6 +155,7 @@
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jCB-jH-XII">
                                                                 <rect key="frame" x="64.666666666666643" y="0.0" width="143.33333333333337" height="59"/>
+                                                                <color key="textColor" systemColor="systemGreenColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                             </textField>
@@ -212,8 +226,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="down_arrow.png" width="43" height="44"/>
-        <image name="up_arrow.png" width="44" height="41"/>
+        <image name="arrow.down.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="arrow.up.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
@@ -222,6 +236,12 @@
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

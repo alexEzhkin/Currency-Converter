@@ -17,7 +17,7 @@ extension CurrencyBalanceCell {
     
     struct Model {
         let currency: Currencies
-        let currencyBalance: Double
+        let currencyBalance: String
     }
     
     func configure(model: Model) {

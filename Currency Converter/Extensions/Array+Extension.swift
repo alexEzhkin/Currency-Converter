@@ -9,12 +9,12 @@ import Foundation
 
 extension Array {
     subscript(safe index: Index) -> Element? {
-            guard indices.contains(index) else { return nil }
-            return self[index]
-        }
-        
-        func item(at index: Int) -> Element? {
-            guard 0..<count ~= index else { return nil }
-            return self[index]
-        }
+        guard indices.contains(index) else { return nil }
+        return self[index]
+    }
+    
+    func item(at index: Int) -> Element? {
+        guard 0..<count ~= index else { return nil }
+        return self[index]
+    }
 }
