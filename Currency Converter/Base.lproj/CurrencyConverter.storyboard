@@ -63,16 +63,16 @@
                                 </cells>
                             </collectionView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PD7-x6-c7G">
-                                <rect key="frame" x="15" y="218" width="378" height="200"/>
+                                <rect key="frame" x="15" y="218" width="368" height="200"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CURRENCY EXCHANGE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M5K-Ki-VAu">
-                                        <rect key="frame" x="0.0" y="0.0" width="378" height="60"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="368" height="60"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" systemColor="systemGrayColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="bg6-NK-s9I">
-                                        <rect key="frame" x="0.0" y="70" width="378" height="60"/>
+                                        <rect key="frame" x="0.0" y="70" width="368" height="60"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qvi-Fb-mdJ">
                                                 <rect key="frame" x="0.0" y="1" width="60" height="58.666666666666671"/>
@@ -89,10 +89,10 @@
                                                 </imageReference>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jWV-pV-h3v">
-                                                <rect key="frame" x="70" y="0.0" width="308" height="60"/>
+                                                <rect key="frame" x="70" y="0.0" width="298" height="60"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleAspectFit" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="GZZ-uh-4s9">
-                                                        <rect key="frame" x="0.0" y="0.0" width="308" height="59"/>
+                                                    <stackView opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="GZZ-uh-4s9">
+                                                        <rect key="frame" x="0.0" y="0.0" width="298" height="59"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sell" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BrW-YG-Pwh">
                                                                 <rect key="frame" x="0.0" y="0.0" width="27.666666666666668" height="59"/>
@@ -101,20 +101,27 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zXS-oA-vEU">
-                                                                <rect key="frame" x="32.666666666666671" y="0.0" width="170.33333333333331" height="59"/>
+                                                                <rect key="frame" x="27.666666666666671" y="0.0" width="150.33333333333331" height="59"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                             </textField>
                                                             <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FDp-ff-bbe">
-                                                                <rect key="frame" x="208" y="0.0" width="100" height="59"/>
+                                                                <rect key="frame" x="178" y="0.0" width="100" height="59"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="100" id="epU-qe-x1N"/>
                                                                 </constraints>
                                                             </pickerView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="n8z-Kw-tej">
+                                                                <rect key="frame" x="278" y="5.3333333333333321" width="20" height="49"/>
+                                                                <color key="tintColor" systemColor="labelColor"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="20" id="6Cr-u5-UKe"/>
+                                                                </constraints>
+                                                            </imageView>
                                                         </subviews>
                                                     </stackView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SmJ-Ij-h2B">
-                                                        <rect key="frame" x="0.0" y="59" width="308" height="1"/>
+                                                        <rect key="frame" x="0.0" y="59" width="298" height="1"/>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="1" id="LQ1-bN-82X"/>
@@ -125,7 +132,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="afz-H3-76c">
-                                        <rect key="frame" x="0.0" y="140" width="378" height="60"/>
+                                        <rect key="frame" x="0.0" y="140" width="368" height="60"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zzN-SE-ZEx">
                                                 <rect key="frame" x="0.0" y="1" width="60" height="58.666666666666671"/>
@@ -142,10 +149,10 @@
                                                 </imageReference>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="A5g-37-HpM">
-                                                <rect key="frame" x="70" y="0.0" width="308" height="60"/>
+                                                <rect key="frame" x="70" y="0.0" width="298" height="60"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleAspectFit" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Jl4-is-unq">
-                                                        <rect key="frame" x="0.0" y="0.0" width="308" height="59"/>
+                                                    <stackView opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Jl4-is-unq">
+                                                        <rect key="frame" x="0.0" y="0.0" width="298" height="59"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recieve" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="51" translatesAutoresizingMaskIntoConstraints="NO" id="fb8-CH-LTe">
                                                                 <rect key="frame" x="0.0" y="0.0" width="59.666666666666664" height="59"/>
@@ -154,21 +161,28 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jCB-jH-XII">
-                                                                <rect key="frame" x="64.666666666666643" y="0.0" width="138.33333333333337" height="59"/>
+                                                                <rect key="frame" x="59.66666666666665" y="0.0" width="118.33333333333331" height="59"/>
                                                                 <color key="textColor" systemColor="systemGreenColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                             </textField>
                                                             <pickerView tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YeC-ls-HQN">
-                                                                <rect key="frame" x="208" y="0.0" width="100" height="59"/>
+                                                                <rect key="frame" x="178" y="0.0" width="100" height="59"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="100" id="3ZH-Kk-i9P"/>
                                                                 </constraints>
                                                             </pickerView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="mZa-FD-97v">
+                                                                <rect key="frame" x="278" y="5.3333333333333321" width="20" height="49"/>
+                                                                <color key="tintColor" systemColor="labelColor"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="20" id="3Nf-Gx-Tsa"/>
+                                                                </constraints>
+                                                            </imageView>
                                                         </subviews>
                                                     </stackView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PT1-ya-DCH">
-                                                        <rect key="frame" x="0.0" y="59" width="308" height="1"/>
+                                                        <rect key="frame" x="0.0" y="59" width="298" height="1"/>
                                                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="1" id="shG-YO-4JO"/>
@@ -205,7 +219,7 @@
                             <constraint firstItem="OCi-wU-TWc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="RwQ-xI-ZJi"/>
                             <constraint firstItem="PD7-x6-c7G" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" priority="999" constant="115" id="dU1-M4-uMJ"/>
                             <constraint firstItem="Wf4-WF-s7G" firstAttribute="top" secondItem="PD7-x6-c7G" secondAttribute="bottom" constant="50" id="llJ-ML-Qn1"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PD7-x6-c7G" secondAttribute="trailing" id="uCQ-en-aUV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PD7-x6-c7G" secondAttribute="trailing" constant="10" id="uCQ-en-aUV"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="OCi-wU-TWc" secondAttribute="trailing" constant="20" id="woU-aE-etW"/>
                             <constraint firstItem="Jz0-nq-au9" firstAttribute="top" secondItem="OCi-wU-TWc" secondAttribute="bottom" constant="30" id="xVt-2w-cnP"/>
                         </constraints>
@@ -228,6 +242,10 @@
     <resources>
         <image name="arrow.down.circle.fill" catalog="system" width="128" height="123"/>
         <image name="arrow.up.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="chevron.down" catalog="system" width="128" height="70"/>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

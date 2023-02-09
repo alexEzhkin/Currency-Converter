@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CurrencyConverterViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UITextFieldDelegate, UINavigationControllerDelegate {
+final class CurrencyConverterViewController: UIViewController {
     
     // MARK: - UI Elements
     
@@ -28,6 +28,8 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     
     private lazy var sellCurrencyPickerState = currencies.first?.segmentTitle ?? ""
     private lazy var recieveCurrencyPickerState = currencies.first?.segmentTitle ?? ""
+    private lazy var roundedPlace = 2
+    private lazy var responseRecieved = false
     
     //MARK: - Override methods
     
@@ -69,7 +71,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     private func setUpNavigationBar() {
-        let navigationBarColor = UIColor(red: CGFloat(1/255.0), green: CGFloat(152/255.0), blue: CGFloat(218/255.0), alpha: CGFloat(1.0))
+        let navigationBarColor = UIColor(named: "navigationBarColor") ?? .blue
         
         self.navigationItem.title = "Currency Converter"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
@@ -82,51 +84,11 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         self.view.addGestureRecognizer(tapGesture)
     }
     
-    // MARK: - Handle Text Field changes
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        let endPosition = textField.endOfDocument
-        textField.selectedTextRange = textField.textRange(from: endPosition,
-                                                          to: endPosition)
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        textField.text = textField.text?.replacingOccurrences(of: ",", with: ".")
-
-        if let text = textField.text, let currencyAmount = Double(text) {
-            fetchExchangeRate(amount: currencyAmount,
-                              fromCurrency: self.sellCurrencyPickerState,
-                              toCurrency: self.recieveCurrencyPickerState)
-        } else if textField.text == "" {
-            recieveCurrencyTextField.text = ""
-        } else {
-            recieveCurrencyTextField.text = "Invalid Input"
-        }
-    }
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if string == "" {
-            return true
-        }
-        if (textField.text?.contains("."))! && string == "." {
-            return false
-        }
-        if (textField.text?.contains("."))! {
-            let decimalPlace = textField.text?.components(separatedBy: ".").last
-            if (decimalPlace?.count)! < Constants.roundedPlace {
-                return true
-            }
-            else {
-                return false
-            }
-        }
-        return true
-    }
-    
     // MARK: - Fetch Exchange Rate
     
     private func fetchExchangeRate(amount: Double, fromCurrency: String, toCurrency: String) {
+        responseRecieved = false
+        
         debouncer.call { [weak self] in
             guard let self else { return }
             self.exchangeWorker.run(ExchangeWorker.Body(amount: amount,
@@ -139,6 +101,7 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
                         return
                     }
                     self?.recieveCurrencyTextField.text = "+\(response.amount)"
+                    self?.responseRecieved = true
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
@@ -146,8 +109,75 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         }
     }
     
-    // MARK: - UIPickerView
+    // MARK: - Actions
     
+    @objc private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        sellCurrencyTextField.resignFirstResponder()
+    }
+    
+    @IBAction private func submitConversionButton(_ sender: Any) {
+        guard responseRecieved else { return }
+        
+        if sellCurrencyPickerState == recieveCurrencyPickerState {
+            return
+        }
+        
+        var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
+        let amountForRecieve = recieveCurrencyTextField.text.flatMap(Double.init) ?? .zero
+        let commissionFee = amountForSell * exchangeWorker.commissionAmount
+        
+        let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
+        let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
+        
+        let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
+        
+        guard (countOfCurrencyConversions <= exchangeWorker.numberOfFreeConversions && currentCurrencyBalance >= amountForSell) || (countOfCurrencyConversions >= exchangeWorker.numberOfFreeConversions && currentCurrencyBalance >=  (amountForSell+commissionFee)) else {
+            return showConversionErrorAlert()
+        }
+        
+        if countOfCurrencyConversions >= exchangeWorker.numberOfFreeConversions {
+            showComissionFeeAlert(sellAmount: amountForSell,
+                                  recieveAmount: amountForRecieve,
+                                  commissionFee: commissionFee)
+            amountForSell = amountForSell + commissionFee
+        }
+        
+        let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: roundedPlace)
+        let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: roundedPlace)
+        
+        CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency,
+                                               for: sellCurrencyPickerState)
+        CurrencyUserDefaultsManager.setBalance(newBalanceForRecieveCurrency,
+                                               for: recieveCurrencyPickerState)
+        CurrencyUserDefaultsManager.currencyConversionsCount += 1
+        
+        currencyBalanceCollectionView.reloadData()
+    }
+    
+    // MARK: - Alerts
+    
+    private func showComissionFeeAlert(sellAmount: Double, recieveAmount: Double, commissionFee: Double) {
+        let messageAlert = UIAlertController(title: "Currency Converted",
+                                             message: "You have converted \(sellAmount) \(sellCurrencyPickerState) to \(recieveAmount) \(recieveCurrencyPickerState). Commission Fee - \(commissionFee.roundTo(places: roundedPlace)) \(sellCurrencyPickerState)",
+                                             preferredStyle: .alert)
+        let action = UIAlertAction(title: "Done", style: .default)
+        messageAlert.addAction(action)
+        present(messageAlert, animated: true)
+    }
+    
+    private func showConversionErrorAlert() {
+        let messageAlert = UIAlertController(title: "Conversion Error",
+                                             message: "Sorry, but you don't have enough funds to convert from \(sellCurrencyPickerState) to \(recieveCurrencyPickerState)",
+                                             preferredStyle: .alert)
+        let action = UIAlertAction(title: "Done", style: .default)
+        messageAlert.addAction(action)
+        present(messageAlert, animated: true)
+    }
+}
+
+// MARK: - UIPickerViewDelegate, UIPickerViewDataSource
+
+extension CurrencyConverterViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1
     }
@@ -172,9 +202,11 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         
         return "\(currencyTitle)"
     }
-    
-    // MARK: - UICollectionView
-    
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension CurrencyConverterViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         currencies.count
     }
@@ -194,77 +226,49 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         
         return cell
     }
-    
-    // MARK: - Actions
-    
-    @objc private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
-        sellCurrencyTextField.resignFirstResponder()
-    }
-    
-    @IBAction private func submitConversionButton(_ sender: Any) {
-        if sellCurrencyPickerState == recieveCurrencyPickerState {
-            return
-        }
-        
-        var amountForSell = sellCurrencyTextField.text.flatMap(Double.init) ?? .zero
-        let amountForRecieve = recieveCurrencyTextField.text.flatMap(Double.init) ?? .zero
-        let commissionFee = amountForSell * Constants.commissionAmount
-        
-        let currentCurrencyBalance = CurrencyUserDefaultsManager.getBalance(for: sellCurrencyPickerState)
-        let currentBalanceForRecieveCurrency = CurrencyUserDefaultsManager.getBalance(for: recieveCurrencyPickerState)
-        
-        let countOfCurrencyConversions = CurrencyUserDefaultsManager.currencyConversionsCount
-        
-        guard (countOfCurrencyConversions <= Constants.numberOfFreeConversions && currentCurrencyBalance >= amountForSell) || (countOfCurrencyConversions >= Constants.numberOfFreeConversions && currentCurrencyBalance >=  (amountForSell+commissionFee)) else {
-            return showConversionErrorAlert()
-        }
-        
-        if countOfCurrencyConversions >= Constants.numberOfFreeConversions {
-            showComissionFeeAlert(sellAmount: amountForSell,
-                                  recieveAmount: amountForRecieve,
-                                  commissionFee: commissionFee)
-            amountForSell = amountForSell + commissionFee
-        }
-        
-        let newBalanceForSellCurrency = (currentCurrencyBalance - amountForSell).roundTo(places: Constants.roundedPlace)
-        let newBalanceForRecieveCurrency = (currentBalanceForRecieveCurrency + amountForRecieve).roundTo(places: Constants.roundedPlace)
-        
-        CurrencyUserDefaultsManager.setBalance(newBalanceForSellCurrency,
-                                               for: sellCurrencyPickerState)
-        CurrencyUserDefaultsManager.setBalance(newBalanceForRecieveCurrency,
-                                               for: recieveCurrencyPickerState)
-        CurrencyUserDefaultsManager.currencyConversionsCount += 1
-        
-        currencyBalanceCollectionView.reloadData()
-    }
-    
-    // MARK: - Alerts
-    
-    private func showComissionFeeAlert(sellAmount: Double, recieveAmount: Double, commissionFee: Double) {
-        let messageAlert = UIAlertController(title: "Currency Converted",
-                                             message: "You have converted \(sellAmount) \(sellCurrencyPickerState) to \(recieveAmount) \(recieveCurrencyPickerState). Commission Fee - \(commissionFee.roundTo(places: Constants.roundedPlace)) \(sellCurrencyPickerState)",
-                                             preferredStyle: .alert)
-        let action = UIAlertAction(title: "Done", style: .default)
-        messageAlert.addAction(action)
-        present(messageAlert, animated: true)
-    }
-    
-    private func showConversionErrorAlert() {
-        let messageAlert = UIAlertController(title: "Conversion Error",
-                                             message: "Sorry, but you don't have enough funds to convert from \(sellCurrencyPickerState) to \(recieveCurrencyPickerState)",
-                                             preferredStyle: .alert)
-        let action = UIAlertAction(title: "Done", style: .default)
-        messageAlert.addAction(action)
-        present(messageAlert, animated: true)
-    }
 }
 
-private extension CurrencyConverterViewController {
+// MARK: - UITextFieldDelegates
+
+extension CurrencyConverterViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let endPosition = textField.endOfDocument
+        textField.selectedTextRange = textField.textRange(from: endPosition,
+                                                          to: endPosition)
+    }
     
-    enum Constants {
-        static let numberOfFreeConversions = 5
-        static let commissionAmount = 0.007
-        static let roundedPlace = 2
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        textField.text = textField.text?.replacingOccurrences(of: ",", with: ".")
+        
+        if let text = textField.text, let currencyAmount = Double(text) {
+            fetchExchangeRate(amount: currencyAmount,
+                              fromCurrency: self.sellCurrencyPickerState,
+                              toCurrency: self.recieveCurrencyPickerState)
+        } else if textField.text == "" {
+            recieveCurrencyTextField.text = ""
+        } else {
+            recieveCurrencyTextField.text = "Invalid Input"
+        }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if string == "" {
+            return true
+        }
+        if (textField.text?.contains("."))! && string == "." {
+            return false
+        }
+        if (textField.text?.contains("."))! {
+            let decimalPlace = textField.text?.components(separatedBy: ".").last
+            if (decimalPlace?.count)! < roundedPlace {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        return true
     }
 }
 

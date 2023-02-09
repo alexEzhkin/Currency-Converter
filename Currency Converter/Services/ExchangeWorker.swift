@@ -20,6 +20,9 @@ struct ExchangeWorker {
         let currency: String
     }
     
+    let numberOfFreeConversions: Int = 5
+    let commissionAmount: Double = 0.007
+    
     var run: (Body, @escaping (Result<Output, NetworkError>) -> Void) -> Void
 }
 
@@ -27,7 +30,8 @@ extension ExchangeWorker {
     
     static var currency: Self {
         Self { input, completion in
-            let stringUrl = "http://api.evp.lt/currency/commercial/exchange/\(input.amount)-\(input.inputCurrency)/\(input.outputCurrency)/latest"
+            guard let exchangeAPI = Bundle.main.object(forInfoDictionaryKey: "ExchangeAPI") else { return }
+            let stringUrl = "\(exchangeAPI)\(input.amount)-\(input.inputCurrency)/\(input.outputCurrency)/latest"
             
             guard let url = URL(string: stringUrl) else { return }
             
