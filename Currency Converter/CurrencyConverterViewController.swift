@@ -91,6 +91,8 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
+        textField.text = textField.text?.replacingOccurrences(of: ",", with: ".")
+
         if let text = textField.text, let currencyAmount = Double(text) {
             fetchExchangeRate(amount: currencyAmount,
                               fromCurrency: self.sellCurrencyPickerState,
@@ -100,6 +102,26 @@ final class CurrencyConverterViewController: UIViewController, UIPickerViewDeleg
         } else {
             recieveCurrencyTextField.text = "Invalid Input"
         }
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if string == "" {
+            return true
+        }
+        if (textField.text?.contains("."))! && string == "." {
+            return false
+        }
+        if (textField.text?.contains("."))! {
+            let decimalPlace = textField.text?.components(separatedBy: ".").last
+            if (decimalPlace?.count)! < Constants.roundedPlace {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        return true
     }
     
     // MARK: - Fetch Exchange Rate
